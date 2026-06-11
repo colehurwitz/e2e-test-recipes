@@ -12,6 +12,7 @@ A self-contained recipe viewer web app with search, filtering, dark mode, and 5-
 - styles.css
 - app.js
 - eval/score.py
+- factory.md
 
 ### Read-only
 
