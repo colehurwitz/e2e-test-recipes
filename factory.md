@@ -11,11 +11,11 @@ A self-contained recipe viewer web app with search, filtering, dark mode, and 5-
 - index.html
 - styles.css
 - app.js
+- eval/score.py
 
 ### Read-only
 
 - CLAUDE.md
-- eval/score.py
 
 ## Guards
 
