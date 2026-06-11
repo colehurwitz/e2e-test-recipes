@@ -163,6 +163,94 @@ const recipes = [
 let activeCategory = "All";
 let searchQuery = "";
 
+function loadRatings() {
+    try {
+        return JSON.parse(localStorage.getItem("recipe-ratings")) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function saveRatings(ratings) {
+    localStorage.setItem("recipe-ratings", JSON.stringify(ratings));
+}
+
+function loadRatedRecipes() {
+    try {
+        return JSON.parse(localStorage.getItem("rated-recipes")) || [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveRatedRecipes(rated) {
+    localStorage.setItem("rated-recipes", JSON.stringify(rated));
+}
+
+function loadReviews() {
+    try {
+        return JSON.parse(localStorage.getItem("recipe-reviews")) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function saveReviews(reviews) {
+    localStorage.setItem("recipe-reviews", JSON.stringify(reviews));
+}
+
+function addRating(recipeId, value) {
+    var ratings = loadRatings();
+    if (!ratings[recipeId]) {
+        ratings[recipeId] = { ratings: [], average: 0 };
+    }
+    ratings[recipeId].ratings.push(value);
+    var sum = ratings[recipeId].ratings.reduce(function (a, b) { return a + b; }, 0);
+    ratings[recipeId].average = Math.round((sum / ratings[recipeId].ratings.length) * 10) / 10;
+    saveRatings(ratings);
+
+    var rated = loadRatedRecipes();
+    if (rated.indexOf(recipeId) === -1) {
+        rated.push(recipeId);
+        saveRatedRecipes(rated);
+    }
+    return ratings[recipeId];
+}
+
+function addReview(recipeId, text) {
+    var reviews = loadReviews();
+    if (!reviews[recipeId]) {
+        reviews[recipeId] = [];
+    }
+    reviews[recipeId].unshift({ text: text, date: new Date().toISOString() });
+    saveReviews(reviews);
+}
+
+function getRatingData(recipeId) {
+    var ratings = loadRatings();
+    return ratings[recipeId] || { ratings: [], average: 0 };
+}
+
+function getReviews(recipeId) {
+    var reviews = loadReviews();
+    return (reviews[recipeId] || []).slice(0, 3);
+}
+
+function hasRated(recipeId) {
+    var rated = loadRatedRecipes();
+    return rated.indexOf(recipeId) !== -1;
+}
+
+function renderStarsText(average, max) {
+    max = max || 5;
+    var full = Math.round(average);
+    var text = "";
+    for (var i = 0; i < max; i++) {
+        text += i < full ? "★" : "☆";
+    }
+    return text;
+}
+
 function getFilteredRecipes() {
     return recipes.filter(function (recipe) {
         const matchesCategory = activeCategory === "All" || recipe.category === activeCategory;
@@ -180,12 +268,19 @@ function renderRecipeCard(recipe) {
     const card = document.createElement("div");
     card.className = "recipe-card";
     card.dataset.recipeId = recipe.id;
+    var data = getRatingData(recipe.id);
+    var starsText = renderStarsText(data.average);
+    var count = data.ratings.length;
     card.innerHTML = `
         <div class="recipe-card-image" style="background: ${recipe.image}">
         </div>
         <div class="recipe-card-body">
             <h2 class="recipe-card-title">${recipe.title}</h2>
             <span class="recipe-card-category">${recipe.category}</span>
+            <div class="card-rating">
+                <span class="stars">${starsText}</span>
+                <span class="rating-count">(${count})</span>
+            </div>
             <div class="recipe-card-meta">
                 <span>${recipe.prepTime}</span>
                 <span>${recipe.servings} servings</span>
@@ -214,9 +309,111 @@ function renderRecipes() {
     });
 }
 
+function buildReviewsHTML(recipeId) {
+    var reviews = getReviews(recipeId);
+    if (reviews.length === 0) return "";
+    var items = reviews.map(function (r) {
+        return '<div class="review-item"><div class="review-text">' + r.text + '</div></div>';
+    }).join("");
+    return '<div class="recent-reviews"><h4>Recent Reviews</h4>' + items + '</div>';
+}
+
+function setupModalRating(recipe) {
+    var container = document.getElementById("modal-star-rating");
+    if (!container) return;
+    var rated = hasRated(recipe.id);
+    var data = getRatingData(recipe.id);
+
+    if (rated) {
+        container.classList.add("rated");
+        var stars = container.querySelectorAll(".star");
+        for (var i = 0; i < stars.length; i++) {
+            if (parseInt(stars[i].getAttribute("data-value")) <= Math.round(data.average)) {
+                stars[i].classList.add("active");
+            }
+        }
+        return;
+    }
+
+    var stars = container.querySelectorAll(".star");
+
+    container.addEventListener("mouseleave", function () {
+        if (container.classList.contains("rated")) return;
+        for (var i = 0; i < stars.length; i++) {
+            stars[i].classList.remove("hover");
+        }
+    });
+
+    for (var i = 0; i < stars.length; i++) {
+        (function (star) {
+            star.addEventListener("mouseenter", function () {
+                if (container.classList.contains("rated")) return;
+                var val = parseInt(star.getAttribute("data-value"));
+                for (var j = 0; j < stars.length; j++) {
+                    var sv = parseInt(stars[j].getAttribute("data-value"));
+                    stars[j].classList.toggle("hover", sv <= val);
+                }
+            });
+
+            star.addEventListener("click", function () {
+                if (container.classList.contains("rated")) return;
+                var val = parseInt(star.getAttribute("data-value"));
+                addRating(recipe.id, val);
+                container.classList.add("rated");
+                for (var j = 0; j < stars.length; j++) {
+                    stars[j].classList.remove("hover");
+                    var sv = parseInt(stars[j].getAttribute("data-value"));
+                    stars[j].classList.toggle("active", sv <= val);
+                }
+                var thanks = document.getElementById("rating-thanks");
+                if (thanks) thanks.style.display = "block";
+
+                var inputArea = document.getElementById("review-input-area");
+                if (inputArea) inputArea.style.display = "block";
+
+                var avgDisplay = document.getElementById("modal-average-display");
+                if (avgDisplay) {
+                    var updated = getRatingData(recipe.id);
+                    avgDisplay.textContent = renderStarsText(updated.average) + " " + updated.average.toFixed(1) + " (" + updated.ratings.length + " ratings)";
+                }
+                renderRecipes();
+            });
+        })(stars[i]);
+    }
+}
+
+function setupReviewInput(recipe) {
+    var submitBtn = document.getElementById("review-submit");
+    if (!submitBtn) return;
+    submitBtn.addEventListener("click", function () {
+        var textarea = document.getElementById("review-text");
+        var text = textarea.value.trim();
+        if (!text) return;
+        addReview(recipe.id, text);
+        textarea.value = "";
+        var reviewsContainer = document.getElementById("modal-reviews");
+        if (reviewsContainer) {
+            reviewsContainer.innerHTML = buildReviewsHTML(recipe.id);
+        }
+    });
+}
+
 function openModal(recipe) {
     var backdrop = document.getElementById("modal-backdrop");
     var content = document.getElementById("modal-content");
+    var data = getRatingData(recipe.id);
+    var rated = hasRated(recipe.id);
+    var avgText = data.ratings.length > 0
+        ? renderStarsText(data.average) + " " + data.average.toFixed(1) + " (" + data.ratings.length + " ratings)"
+        : "No ratings yet";
+
+    var starsHTML = "";
+    for (var i = 1; i <= 5; i++) {
+        var cls = "star";
+        if (rated && i <= Math.round(data.average)) cls += " active";
+        starsHTML += '<span class="' + cls + '" data-value="' + i + '">★</span>';
+    }
+
     content.innerHTML = `
         <div class="modal-image" style="background: ${recipe.image}"></div>
         <div class="modal-body">
@@ -226,6 +423,19 @@ function openModal(recipe) {
                 <span>${recipe.prepTime}</span>
                 <span>${recipe.servings} servings</span>
             </div>
+            <div class="modal-rating">
+                <div class="rating-label">Rate this recipe</div>
+                <div class="star-rating${rated ? ' rated' : ''}" id="modal-star-rating">
+                    ${starsHTML}
+                </div>
+                <div class="rating-thanks" id="rating-thanks" style="display:${rated ? 'block' : 'none'}">Thanks for rating!</div>
+                <div class="average-display" id="modal-average-display">${avgText}</div>
+                <div class="review-input-area" id="review-input-area" style="display:${rated ? 'block' : 'none'}">
+                    <textarea id="review-text" placeholder="Write a review (optional)..." rows="2"></textarea>
+                    <button id="review-submit">Submit Review</button>
+                </div>
+            </div>
+            <div id="modal-reviews">${buildReviewsHTML(recipe.id)}</div>
             <h3 class="modal-section-title">Ingredients</h3>
             <ul class="modal-ingredients">
                 ${recipe.ingredients.map(function (i) { return "<li>" + i + "</li>"; }).join("")}
@@ -236,6 +446,10 @@ function openModal(recipe) {
             </ol>
         </div>
     `;
+
+    setupModalRating(recipe);
+    setupReviewInput(recipe);
+
     backdrop.hidden = false;
     requestAnimationFrame(function () {
         backdrop.classList.add("visible");

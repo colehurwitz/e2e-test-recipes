@@ -131,6 +131,45 @@ def check_detail_view(html, css, js):
     }
 
 
+def check_rating_system(css, js):
+    css_has_star_styles = False
+    css_has_star_color_var = False
+    if css:
+        css_has_star_styles = ".star" in css or "star-rating" in css
+        css_has_star_color_var = "--star-color" in css
+
+    js_has_star_elements = False
+    js_has_data_value = False
+    js_has_localstorage_ratings = False
+    js_has_average_calc = False
+    js_has_click_handler = False
+    js_has_hover_handler = False
+    js_has_duplicate_prevention = False
+    js_has_review_storage = False
+    if js:
+        js_has_star_elements = "★" in js or "☆" in js
+        js_has_data_value = "data-value" in js
+        js_has_localstorage_ratings = "recipe-ratings" in js and "localStorage" in js
+        js_has_average_calc = "average" in js and ("reduce" in js or "sum" in js)
+        js_has_click_handler = "click" in js and ("addRating" in js or "rating" in js.lower())
+        js_has_hover_handler = "mouseenter" in js or "mouseover" in js or "hover" in js
+        js_has_duplicate_prevention = "rated-recipes" in js or "hasRated" in js
+        js_has_review_storage = "recipe-reviews" in js or "review" in js.lower()
+
+    return {
+        "css_has_star_styles": css_has_star_styles,
+        "css_has_star_color_var": css_has_star_color_var,
+        "js_has_star_elements": js_has_star_elements,
+        "js_has_data_value": js_has_data_value,
+        "js_has_localstorage_ratings": js_has_localstorage_ratings,
+        "js_has_average_calc": js_has_average_calc,
+        "js_has_click_handler": js_has_click_handler,
+        "js_has_hover_handler": js_has_hover_handler,
+        "js_has_duplicate_prevention": js_has_duplicate_prevention,
+        "js_has_review_storage": js_has_review_storage,
+    }
+
+
 def check_dark_mode(html, css, js):
     css_has_dark_theme = False
     css_dark_properties = 0
@@ -178,6 +217,7 @@ def compute_score():
     filter_checks = check_category_filter(html, js)
     detail_checks = check_detail_view(html, css, js)
     dark_mode_checks = check_dark_mode(html, css, js)
+    rating_checks = check_rating_system(css, js)
 
     file_score = sum(file_checks.values()) / len(file_checks) if file_checks else 0
 
@@ -210,15 +250,19 @@ def compute_score():
     dm_js_storage = 1.0 if dark_mode_checks["js_has_localstorage_persistence"] else 0.0
     dark_mode_score = (dm_has_theme + dm_props + dm_toggle_btn + dm_fouc + dm_js_toggle + dm_js_storage) / 6
 
+    rating_parts = list(rating_checks.values())
+    rating_score = sum(rating_parts) / len(rating_parts) if rating_parts else 0
+
     composite = (
-        (file_score * 0.10)
-        + (html_score * 0.10)
-        + (css_score * 0.10)
-        + (js_score * 0.15)
-        + (search_score * 0.15)
-        + (filter_score * 0.10)
-        + (detail_score * 0.15)
-        + (dark_mode_score * 0.15)
+        (file_score * 0.08)
+        + (html_score * 0.08)
+        + (css_score * 0.08)
+        + (js_score * 0.12)
+        + (search_score * 0.12)
+        + (filter_score * 0.08)
+        + (detail_score * 0.12)
+        + (dark_mode_score * 0.12)
+        + (rating_score * 0.20)
     )
 
     return {
@@ -232,6 +276,7 @@ def compute_score():
             "category_filter": {"score": round(filter_score, 4), "details": filter_checks},
             "detail_view": {"score": round(detail_score, 4), "details": detail_checks},
             "dark_mode": {"score": round(dark_mode_score, 4), "details": dark_mode_checks},
+            "rating_system": {"score": round(rating_score, 4), "details": rating_checks},
         },
     }
 
