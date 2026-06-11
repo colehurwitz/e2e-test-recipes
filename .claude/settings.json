@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [],
+    "deny": []
+  },
+  "hooks": {
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'INPUT=$(cat); CWD=$(echo \"$INPUT\" | jq -r \".cwd // empty\" 2>/dev/null); REPO=${CWD:-$PWD}; TRANSCRIPT=$(echo \"$INPUT\" | jq -r \".transcript_path // empty\" 2>/dev/null); TRIGGER=$(echo \"$INPUT\" | jq -r \".trigger // empty\" 2>/dev/null); SNAP_DIR=\"$REPO/.claude/sop-compact\"; mkdir -p \"$SNAP_DIR\"; TS=$(date -u +%Y%m%dT%H%M%SZ)-$$; HANDOFF=\"$SNAP_DIR/handoff-$TS.md\"; SOP=\"$REPO/.claude/sop-compact.md\"; if [ ! -f \"$SOP\" ]; then printf \"# Pre-compact handoff (stub)\\n\\n_Generated %s (trigger: %s)._\\n\\nNo .claude/sop-compact.md found. Run /init-sop-compact to generate one.\\n\\nTranscript: %s\\n\" \"$TS\" \"$TRIGGER\" \"$TRANSCRIPT\" > \"$HANDOFF\"; exit 0; fi; PROMPT=$(printf \"You are the pre-compact sidecar. Read %s for the repo procedure, then read the transcript at %s. PROMOTE principled learnings to the targets named in the SOP. Then output a dense handoff between ===HANDOFF=== and ===END=== sentinels capturing non-reconstructable in-flight context.\" \"$SOP\" \"$TRANSCRIPT\"); RAW=$(cd \"$REPO\" && timeout ${SOP_COMPACT_TIMEOUT:-600} claude -p \"$PROMPT\" --model ${SOP_COMPACT_MODEL:-opus} --dangerously-skip-permissions --no-chrome --no-session-persistence --strict-mcp-config --disable-slash-commands 2>/dev/null); RC=$?; if [ $RC -ne 0 ] || [ -z \"$RAW\" ]; then printf \"# Pre-compact handoff (sidecar failed rc=%s)\\n\\n_Generated %s._\\n\\nTranscript: %s\\n\" \"$RC\" \"$TS\" \"$TRANSCRIPT\" > \"$HANDOFF\"; exit 0; fi; BODY=$(printf \"%s\" \"$RAW\" | awk \"/^===HANDOFF===$/{c=1;next}/^===END===$/{c=0;next}c\"); if [ -n \"$BODY\" ]; then printf \"%s\\n\" \"$BODY\" > \"$HANDOFF\"; else printf \"%s\\n\" \"$RAW\" > \"$HANDOFF\"; fi'"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'INPUT=$(cat); SOURCE=$(echo \"$INPUT\" | jq -r \".source // empty\" 2>/dev/null); [ \"$SOURCE\" != \"compact\" ] && exit 0; CWD=$(echo \"$INPUT\" | jq -r \".cwd // empty\" 2>/dev/null); REPO=${CWD:-$PWD}; LATEST=$(ls -t \"$REPO/.claude/sop-compact/\"handoff-*.md 2>/dev/null | head -1); if [ -n \"$LATEST\" ]; then MSG=\"You were just compacted. Read $LATEST immediately for orientation. Trust: live state > handoff > summary.\"; else MSG=\"You were just compacted but no handoff found. Re-check live state before acting.\"; fi; jq -nc --arg ctx \"$MSG\" \"{hookSpecificOutput:{hookEventName:\\\"SessionStart\\\",additionalContext:\\$ctx}}\"'"
+          }
+        ]
+      }
+    ]
+  }
+}
