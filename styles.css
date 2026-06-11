@@ -601,8 +601,6 @@ body {
 
     .modal-image {
         height: 150px;
-        print-color-adjust: exact;
-        -webkit-print-color-adjust: exact;
     }
 }
 
