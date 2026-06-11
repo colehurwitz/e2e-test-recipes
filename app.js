@@ -254,7 +254,30 @@ function closeModal() {
     document.body.style.overflow = "";
 }
 
+function getTheme() {
+    return document.documentElement.getAttribute("data-theme") || "light";
+}
+
+function updateToggleButton() {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn) return;
+    var isDark = getTheme() === "dark";
+    btn.textContent = isDark ? "☀️" : "🌙";
+    btn.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+}
+
+function toggleTheme() {
+    var newTheme = getTheme() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+    updateToggleButton();
+}
+
 document.addEventListener("DOMContentLoaded", function () {
+    updateToggleButton();
+
+    document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+
     renderRecipes();
 
     document.getElementById("search-input").addEventListener("input", function (e) {

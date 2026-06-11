@@ -131,6 +131,40 @@ def check_detail_view(html, css, js):
     }
 
 
+def check_dark_mode(html, css, js):
+    css_has_dark_theme = False
+    css_dark_properties = 0
+    if css:
+        css_has_dark_theme = 'data-theme="dark"' in css or "data-theme='dark'" in css
+        if css_has_dark_theme:
+            dark_section_match = re.search(r'\[data-theme=["\']dark["\']\]\s*\{([^}]+)\}', css)
+            if dark_section_match:
+                dark_block = dark_section_match.group(1)
+                css_dark_properties = sum(1 for prop in CSS_CUSTOM_PROPERTIES if prop in dark_block)
+
+    html_has_toggle = False
+    html_has_fouc_script = False
+    if html:
+        html_has_toggle = "theme-toggle" in html
+        html_has_fouc_script = "localStorage" in html and "data-theme" in html
+
+    js_has_toggle = False
+    js_has_localstorage = False
+    if js:
+        js_has_toggle = "toggleTheme" in js or "theme-toggle" in js
+        js_has_localstorage = "localStorage" in js and "theme" in js
+
+    return {
+        "css_has_dark_theme": css_has_dark_theme,
+        "css_dark_properties": css_dark_properties,
+        "css_dark_properties_total": len(CSS_CUSTOM_PROPERTIES),
+        "html_has_toggle_button": html_has_toggle,
+        "html_has_fouc_prevention": html_has_fouc_script,
+        "js_has_toggle_logic": js_has_toggle,
+        "js_has_localstorage_persistence": js_has_localstorage,
+    }
+
+
 def compute_score():
     html = read_file("index.html")
     css = read_file("styles.css")
@@ -143,6 +177,7 @@ def compute_score():
     search_checks = check_search_feature(html, js)
     filter_checks = check_category_filter(html, js)
     detail_checks = check_detail_view(html, css, js)
+    dark_mode_checks = check_dark_mode(html, css, js)
 
     file_score = sum(file_checks.values()) / len(file_checks) if file_checks else 0
 
@@ -167,14 +202,23 @@ def compute_score():
     detail_parts = list(detail_checks.values())
     detail_score = sum(detail_parts) / len(detail_parts) if detail_parts else 0
 
+    dm_has_theme = 1.0 if dark_mode_checks["css_has_dark_theme"] else 0.0
+    dm_props = dark_mode_checks["css_dark_properties"] / dark_mode_checks["css_dark_properties_total"] if dark_mode_checks["css_dark_properties_total"] else 0
+    dm_toggle_btn = 1.0 if dark_mode_checks["html_has_toggle_button"] else 0.0
+    dm_fouc = 1.0 if dark_mode_checks["html_has_fouc_prevention"] else 0.0
+    dm_js_toggle = 1.0 if dark_mode_checks["js_has_toggle_logic"] else 0.0
+    dm_js_storage = 1.0 if dark_mode_checks["js_has_localstorage_persistence"] else 0.0
+    dark_mode_score = (dm_has_theme + dm_props + dm_toggle_btn + dm_fouc + dm_js_toggle + dm_js_storage) / 6
+
     composite = (
         (file_score * 0.10)
-        + (html_score * 0.15)
-        + (css_score * 0.15)
-        + (js_score * 0.20)
+        + (html_score * 0.10)
+        + (css_score * 0.10)
+        + (js_score * 0.15)
         + (search_score * 0.15)
         + (filter_score * 0.10)
         + (detail_score * 0.15)
+        + (dark_mode_score * 0.15)
     )
 
     return {
@@ -187,6 +231,7 @@ def compute_score():
             "search_feature": {"score": round(search_score, 4), "details": search_checks},
             "category_filter": {"score": round(filter_score, 4), "details": filter_checks},
             "detail_view": {"score": round(detail_score, 4), "details": detail_checks},
+            "dark_mode": {"score": round(dark_mode_score, 4), "details": dark_mode_checks},
         },
     }
 

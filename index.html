@@ -6,13 +6,25 @@
     <meta name="color-scheme" content="light dark">
     <meta name="description" content="Browse and discover delicious recipes">
     <title>Recipe Viewer</title>
+    <script>
+        (function() {
+            var theme = localStorage.getItem("theme");
+            if (!theme) {
+                theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            }
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="site-header">
         <h1 class="site-title">Recipe Viewer</h1>
-        <div class="search-wrapper">
-            <input type="text" id="search-input" class="search-input" placeholder="Search recipes..." aria-label="Search recipes">
+        <div class="header-controls">
+            <div class="search-wrapper">
+                <input type="text" id="search-input" class="search-input" placeholder="Search recipes..." aria-label="Search recipes">
+            </div>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Switch to dark mode">☀️</button>
         </div>
     </header>
 

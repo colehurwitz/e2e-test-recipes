@@ -7,6 +7,19 @@
     --accent: #e85d04;
     --border: #dee2e6;
     --shadow: rgba(0, 0, 0, 0.08);
+    --modal-backdrop: rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-card: #252525;
+    --text-primary: #e4e4e7;
+    --text-secondary: #a1a1aa;
+    --accent: #f59e0b;
+    --border: #3f3f46;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --modal-backdrop: rgba(0, 0, 0, 0.7);
 }
 
 *,
@@ -108,8 +121,32 @@ body {
     color: var(--text-secondary);
 }
 
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 0 1 auto;
+}
+
 .search-wrapper {
     flex: 0 1 300px;
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.theme-toggle:hover {
+    border-color: var(--accent);
+    background-color: var(--bg-primary);
 }
 
 .search-input {
@@ -165,7 +202,7 @@ body {
 .modal-backdrop {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--modal-backdrop);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -303,8 +340,12 @@ body {
         gap: 0.75rem;
     }
 
+    .header-controls {
+        width: 100%;
+    }
+
     .search-wrapper {
-        flex: 1 1 100%;
+        flex: 1 1 auto;
     }
 
     .recipe-grid {
