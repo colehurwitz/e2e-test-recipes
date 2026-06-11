@@ -204,6 +204,52 @@ def check_dark_mode(html, css, js):
     }
 
 
+def check_pdf_export(css, js):
+    css_has_media_print = False
+    css_has_page_rule = False
+    css_hides_non_content = False
+    css_hides_interactive = False
+    css_has_high_contrast = False
+    css_has_break_inside = False
+    css_has_print_typography = False
+    if css:
+        css_has_media_print = "@media print" in css
+        css_has_page_rule = "@page" in css
+        css_hides_non_content = "visibility: hidden" in css and "visibility: visible" in css
+        css_hides_interactive = (
+            css_has_media_print
+            and ("display: none" in css or "display:none" in css)
+            and (".modal-close" in css or ".modal-rating" in css or ".export-pdf-btn" in css)
+        )
+        css_has_high_contrast = "color: #000" in css or "color:#000" in css
+        css_has_break_inside = "break-inside" in css
+        css_has_print_typography = "12pt" in css or "font-size:" in css
+
+    js_has_export_btn = False
+    js_has_window_print = False
+    js_has_title_swap = False
+    js_has_afterprint = False
+    if js:
+        js_has_export_btn = "export-pdf-btn" in js or "export-pdf" in js
+        js_has_window_print = "window.print()" in js
+        js_has_title_swap = "document.title" in js
+        js_has_afterprint = "afterprint" in js
+
+    return {
+        "css_has_media_print": css_has_media_print,
+        "css_has_page_rule": css_has_page_rule,
+        "css_hides_non_content": css_hides_non_content,
+        "css_hides_interactive": css_hides_interactive,
+        "css_has_high_contrast": css_has_high_contrast,
+        "css_has_break_inside": css_has_break_inside,
+        "css_has_print_typography": css_has_print_typography,
+        "js_has_export_btn": js_has_export_btn,
+        "js_has_window_print": js_has_window_print,
+        "js_has_title_swap": js_has_title_swap,
+        "js_has_afterprint": js_has_afterprint,
+    }
+
+
 def compute_score():
     html = read_file("index.html")
     css = read_file("styles.css")
@@ -218,6 +264,7 @@ def compute_score():
     detail_checks = check_detail_view(html, css, js)
     dark_mode_checks = check_dark_mode(html, css, js)
     rating_checks = check_rating_system(css, js)
+    pdf_export_checks = check_pdf_export(css, js)
 
     file_score = sum(file_checks.values()) / len(file_checks) if file_checks else 0
 
@@ -253,16 +300,20 @@ def compute_score():
     rating_parts = list(rating_checks.values())
     rating_score = sum(rating_parts) / len(rating_parts) if rating_parts else 0
 
+    pdf_export_parts = list(pdf_export_checks.values())
+    pdf_export_score = sum(pdf_export_parts) / len(pdf_export_parts) if pdf_export_parts else 0
+
     composite = (
-        (file_score * 0.08)
-        + (html_score * 0.08)
-        + (css_score * 0.08)
-        + (js_score * 0.12)
-        + (search_score * 0.12)
-        + (filter_score * 0.08)
-        + (detail_score * 0.12)
-        + (dark_mode_score * 0.12)
-        + (rating_score * 0.20)
+        (file_score * 0.07)
+        + (html_score * 0.07)
+        + (css_score * 0.07)
+        + (js_score * 0.11)
+        + (search_score * 0.11)
+        + (filter_score * 0.07)
+        + (detail_score * 0.11)
+        + (dark_mode_score * 0.11)
+        + (rating_score * 0.18)
+        + (pdf_export_score * 0.10)
     )
 
     return {
@@ -277,6 +328,7 @@ def compute_score():
             "detail_view": {"score": round(detail_score, 4), "details": detail_checks},
             "dark_mode": {"score": round(dark_mode_score, 4), "details": dark_mode_checks},
             "rating_system": {"score": round(rating_score, 4), "details": rating_checks},
+            "pdf_export": {"score": round(pdf_export_score, 4), "details": pdf_export_checks},
         },
     }
 

@@ -423,6 +423,7 @@ function openModal(recipe) {
                 <span>${recipe.prepTime}</span>
                 <span>${recipe.servings} servings</span>
             </div>
+            <button class="export-pdf-btn" id="export-pdf-btn">🖨️ Export PDF</button>
             <div class="modal-rating">
                 <div class="rating-label">Rate this recipe</div>
                 <div class="star-rating${rated ? ' rated' : ''}" id="modal-star-rating">
@@ -449,6 +450,19 @@ function openModal(recipe) {
 
     setupModalRating(recipe);
     setupReviewInput(recipe);
+
+    var exportBtn = document.getElementById("export-pdf-btn");
+    if (exportBtn) {
+        exportBtn.addEventListener("click", function () {
+            var originalTitle = document.title;
+            document.title = recipe.title;
+            window.addEventListener("afterprint", function handler() {
+                window.removeEventListener("afterprint", handler);
+                document.title = originalTitle;
+            });
+            window.print();
+        });
+    }
 
     backdrop.hidden = false;
     requestAnimationFrame(function () {

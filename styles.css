@@ -502,6 +502,110 @@ body {
     line-height: 1.4;
 }
 
+.export-pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.export-pdf-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+@media print {
+    @page {
+        margin: 20mm 15mm;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    .modal,
+    .modal *,
+    .modal-content,
+    .modal-content * {
+        visibility: visible;
+    }
+
+    .modal-backdrop {
+        position: absolute;
+        background: none;
+    }
+
+    .modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        max-height: none;
+        overflow: visible;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .modal-rating,
+    .modal-close,
+    .export-pdf-btn,
+    .review-input-area,
+    #review-submit,
+    .star-rating,
+    .rating-label,
+    .rating-thanks,
+    .average-display {
+        display: none !important;
+    }
+
+    .modal,
+    .modal-body,
+    .modal-content,
+    .modal-title,
+    .modal-meta,
+    .modal-section-title,
+    .modal-ingredients,
+    .modal-ingredients li,
+    .modal-instructions,
+    .modal-instructions li,
+    .modal-image,
+    .recipe-card-category,
+    .recent-reviews,
+    .recent-reviews h4,
+    .review-item,
+    .review-item .review-text {
+        color: #000 !important;
+        background: #fff !important;
+    }
+
+    .modal-body {
+        font-size: 12pt;
+        line-height: 1.6;
+    }
+
+    .modal-ingredients,
+    .modal-instructions {
+        break-inside: avoid;
+    }
+
+    .modal-image {
+        height: 150px;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+}
+
 @media (max-width: 768px) {
     .site-header {
         padding: 0.75rem 1rem;
