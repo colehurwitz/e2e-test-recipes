@@ -223,7 +223,7 @@ def check_pdf_export(css, js):
         )
         css_has_high_contrast = "color: #000" in css or "color:#000" in css
         css_has_break_inside = "break-inside" in css
-        css_has_print_typography = "12pt" in css or "font-size:" in css
+        css_has_print_typography = "12pt" in css
 
     js_has_export_btn = False
     js_has_window_print = False
