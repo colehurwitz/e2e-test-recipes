@@ -83,6 +83,54 @@ def check_js_recipe_data(content):
     }
 
 
+def check_search_feature(html, js):
+    html_has_input = False
+    if html:
+        html_has_input = 'id="search-input"' in html or "id='search-input'" in html
+    js_has_listener = False
+    js_has_filter = False
+    if js:
+        js_has_listener = "search-input" in js and ("addEventListener" in js or "oninput" in js)
+        js_has_filter = "filter" in js and ("indexOf" in js or "includes" in js or "search" in js or "match" in js)
+    return {
+        "html_has_search_input": html_has_input,
+        "js_has_search_listener": js_has_listener,
+        "js_has_filter_logic": js_has_filter,
+    }
+
+
+def check_category_filter(html, js):
+    html_has_filters = False
+    if html:
+        html_has_filters = "category-filters" in html or "filter-btn" in html
+    js_has_category_logic = False
+    if js:
+        js_has_category_logic = "category" in js.lower() and ("active" in js or "filter" in js)
+    return {
+        "html_has_filter_buttons": html_has_filters,
+        "js_has_category_logic": js_has_category_logic,
+    }
+
+
+def check_detail_view(html, css, js):
+    html_has_modal = False
+    if html:
+        html_has_modal = ("modal" in html.lower() or "overlay" in html.lower() or "detail" in html.lower())
+    css_has_modal_style = False
+    if css:
+        css_has_modal_style = ".modal" in css or ".overlay" in css or ".detail-view" in css
+    js_has_open_close = False
+    if js:
+        has_open = "openModal" in js or "showDetail" in js or "showModal" in js
+        has_close = "closeModal" in js or "hideDetail" in js or "hideModal" in js
+        js_has_open_close = has_open and has_close
+    return {
+        "html_has_modal_container": html_has_modal,
+        "css_has_modal_styles": css_has_modal_style,
+        "js_has_open_close_handlers": js_has_open_close,
+    }
+
+
 def compute_score():
     html = read_file("index.html")
     css = read_file("styles.css")
@@ -92,6 +140,9 @@ def compute_score():
     html_checks = check_html_structure(html)
     css_checks = check_css_custom_properties(css)
     js_checks = check_js_recipe_data(js)
+    search_checks = check_search_feature(html, js)
+    filter_checks = check_category_filter(html, js)
+    detail_checks = check_detail_view(html, css, js)
 
     file_score = sum(file_checks.values()) / len(file_checks) if file_checks else 0
 
@@ -107,7 +158,24 @@ def compute_score():
     js_count = min(js_checks["recipe_count"] / 5, 1.0)
     js_score = (js_array + js_fields + js_count) / 3
 
-    composite = (file_score * 0.2) + (html_score * 0.25) + (css_score * 0.25) + (js_score * 0.3)
+    search_parts = list(search_checks.values())
+    search_score = sum(search_parts) / len(search_parts) if search_parts else 0
+
+    filter_parts = list(filter_checks.values())
+    filter_score = sum(filter_parts) / len(filter_parts) if filter_parts else 0
+
+    detail_parts = list(detail_checks.values())
+    detail_score = sum(detail_parts) / len(detail_parts) if detail_parts else 0
+
+    composite = (
+        (file_score * 0.10)
+        + (html_score * 0.15)
+        + (css_score * 0.15)
+        + (js_score * 0.20)
+        + (search_score * 0.15)
+        + (filter_score * 0.10)
+        + (detail_score * 0.15)
+    )
 
     return {
         "composite": round(composite, 4),
@@ -116,6 +184,9 @@ def compute_score():
             "html_structure": {"score": round(html_score, 4), "details": html_checks},
             "css_custom_properties": {"score": round(css_score, 4), "details": css_checks},
             "js_recipe_data": {"score": round(js_score, 4), "details": js_checks},
+            "search_feature": {"score": round(search_score, 4), "details": search_checks},
+            "category_filter": {"score": round(filter_score, 4), "details": filter_checks},
+            "detail_view": {"score": round(detail_score, 4), "details": detail_checks},
         },
     }
 

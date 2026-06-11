@@ -160,6 +160,22 @@ const recipes = [
     }
 ];
 
+let activeCategory = "All";
+let searchQuery = "";
+
+function getFilteredRecipes() {
+    return recipes.filter(function (recipe) {
+        const matchesCategory = activeCategory === "All" || recipe.category === activeCategory;
+        if (!matchesCategory) return false;
+        if (!searchQuery) return true;
+        const q = searchQuery.toLowerCase();
+        if (recipe.title.toLowerCase().indexOf(q) !== -1) return true;
+        return recipe.ingredients.some(function (ing) {
+            return ing.toLowerCase().indexOf(q) !== -1;
+        });
+    });
+}
+
 function renderRecipeCard(recipe) {
     const card = document.createElement("div");
     card.className = "recipe-card";
@@ -176,17 +192,95 @@ function renderRecipeCard(recipe) {
             </div>
         </div>
     `;
+    card.addEventListener("click", function () {
+        openModal(recipe);
+    });
     return card;
 }
 
 function renderRecipes() {
     const grid = document.getElementById("recipe-grid");
     grid.innerHTML = "";
-    recipes.forEach(function (recipe) {
+    const filtered = getFilteredRecipes();
+    if (filtered.length === 0) {
+        var msg = document.createElement("p");
+        msg.className = "no-results";
+        msg.textContent = "No recipes found.";
+        grid.appendChild(msg);
+        return;
+    }
+    filtered.forEach(function (recipe) {
         grid.appendChild(renderRecipeCard(recipe));
     });
 }
 
+function openModal(recipe) {
+    var backdrop = document.getElementById("modal-backdrop");
+    var content = document.getElementById("modal-content");
+    content.innerHTML = `
+        <div class="modal-image" style="background: ${recipe.image}"></div>
+        <div class="modal-body">
+            <h2 class="modal-title">${recipe.title}</h2>
+            <div class="modal-meta">
+                <span class="recipe-card-category">${recipe.category}</span>
+                <span>${recipe.prepTime}</span>
+                <span>${recipe.servings} servings</span>
+            </div>
+            <h3 class="modal-section-title">Ingredients</h3>
+            <ul class="modal-ingredients">
+                ${recipe.ingredients.map(function (i) { return "<li>" + i + "</li>"; }).join("")}
+            </ul>
+            <h3 class="modal-section-title">Instructions</h3>
+            <ol class="modal-instructions">
+                ${recipe.instructions.map(function (s) { return "<li>" + s + "</li>"; }).join("")}
+            </ol>
+        </div>
+    `;
+    backdrop.hidden = false;
+    requestAnimationFrame(function () {
+        backdrop.classList.add("visible");
+    });
+    document.body.style.overflow = "hidden";
+}
+
+function closeModal() {
+    var backdrop = document.getElementById("modal-backdrop");
+    backdrop.classList.remove("visible");
+    backdrop.addEventListener("transitionend", function handler() {
+        backdrop.removeEventListener("transitionend", handler);
+        backdrop.hidden = true;
+        document.getElementById("modal-content").innerHTML = "";
+    });
+    document.body.style.overflow = "";
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     renderRecipes();
+
+    document.getElementById("search-input").addEventListener("input", function (e) {
+        searchQuery = e.target.value.trim();
+        renderRecipes();
+    });
+
+    document.getElementById("category-filters").addEventListener("click", function (e) {
+        if (!e.target.matches(".filter-btn")) return;
+        activeCategory = e.target.dataset.category;
+        document.querySelectorAll(".filter-btn").forEach(function (btn) {
+            btn.classList.toggle("active", btn.dataset.category === activeCategory);
+        });
+        renderRecipes();
+    });
+
+    document.getElementById("modal-backdrop").addEventListener("click", function (e) {
+        if (e.target === this) closeModal();
+    });
+
+    document.getElementById("modal-close").addEventListener("click", closeModal);
+
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+            var backdrop = document.getElementById("modal-backdrop");
+            if (!backdrop.hidden) closeModal();
+        }
+    });
 });
