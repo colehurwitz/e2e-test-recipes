@@ -13,6 +13,10 @@ A self-contained recipe viewer web app with search, filtering, dark mode, and 5-
 - app.js
 - eval/score.py
 - factory.md
+- package.json
+- eslint.config.mjs
+- jsconfig.json
+- tests/
 
 ### Read-only
 
@@ -23,7 +27,7 @@ A self-contained recipe viewer web app with search, filtering, dark mode, and 5-
 - Do not delete or overwrite existing tests
 - Do not modify files outside the declared scope
 - Do not introduce secrets or credentials into the repository
-- Do not add external dependencies (frameworks, build tools, package managers)
+- Do not add external runtime dependencies — dev-only tooling (test runners, linters, type checkers) is permitted and does not affect the vanilla runtime
 - Do not use external APIs for recipe data — keep data hardcoded
 
 ## Eval
@@ -37,6 +41,14 @@ python3 eval/score.py
 ### Threshold
 
 0.8
+
+## Eval Weights
+
+hygiene: 0.35, growth: 0.35, project: 0.30
+
+## Project Eval
+
+file_existence, html_structure, css_custom_properties, js_recipe_data, search_feature, category_filter, detail_view, dark_mode, rating_system, pdf_export
 
 ## Target Branch
 

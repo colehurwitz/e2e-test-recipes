@@ -1,3 +1,19 @@
+var logger = {
+    info: function (event, data) {
+        console.log(JSON.stringify({ level: "info", event: event, data: data, ts: new Date().toISOString() }));
+    },
+    warn: function (event, data) {
+        console.warn(JSON.stringify({ level: "warn", event: event, data: data, ts: new Date().toISOString() }));
+    },
+    error: function (event, data) {
+        console.error(JSON.stringify({ level: "error", event: event, data: data, ts: new Date().toISOString() }));
+    }
+};
+
+window.onerror = function (message, source, lineno, colno, error) {
+    logger.error("uncaught_error", { message: message, source: source, lineno: lineno, colno: colno, stack: error && error.stack });
+};
+
 const recipes = [
     {
         id: 1,
@@ -167,6 +183,7 @@ function loadRatings() {
     try {
         return JSON.parse(localStorage.getItem("recipe-ratings")) || {};
     } catch (e) {
+        logger.warn("localStorage_parse_error", { key: "recipe-ratings", error: e.message });
         return {};
     }
 }
@@ -179,6 +196,7 @@ function loadRatedRecipes() {
     try {
         return JSON.parse(localStorage.getItem("rated-recipes")) || [];
     } catch (e) {
+        logger.warn("localStorage_parse_error", { key: "rated-recipes", error: e.message });
         return [];
     }
 }
@@ -191,6 +209,7 @@ function loadReviews() {
     try {
         return JSON.parse(localStorage.getItem("recipe-reviews")) || {};
     } catch (e) {
+        logger.warn("localStorage_parse_error", { key: "recipe-reviews", error: e.message });
         return {};
     }
 }
@@ -200,6 +219,7 @@ function saveReviews(reviews) {
 }
 
 function addRating(recipeId, value) {
+    logger.info("add_rating", { recipeId: recipeId, value: value });
     var ratings = loadRatings();
     if (!ratings[recipeId]) {
         ratings[recipeId] = { ratings: [], average: 0 };
@@ -218,6 +238,7 @@ function addRating(recipeId, value) {
 }
 
 function addReview(recipeId, text) {
+    logger.info("add_review", { recipeId: recipeId, length: text.length });
     var reviews = loadReviews();
     if (!reviews[recipeId]) {
         reviews[recipeId] = [];
@@ -297,6 +318,7 @@ function renderRecipes() {
     const grid = document.getElementById("recipe-grid");
     grid.innerHTML = "";
     const filtered = getFilteredRecipes();
+    logger.info("render_recipes", { count: filtered.length, category: activeCategory, query: searchQuery });
     if (filtered.length === 0) {
         var msg = document.createElement("p");
         msg.className = "no-results";
@@ -386,7 +408,7 @@ function setupReviewInput(recipe) {
     var submitBtn = document.getElementById("review-submit");
     if (!submitBtn) return;
     submitBtn.addEventListener("click", function () {
-        var textarea = document.getElementById("review-text");
+        var textarea = /** @type {HTMLTextAreaElement} */ (document.getElementById("review-text"));
         var text = textarea.value.trim();
         if (!text) return;
         addReview(recipe.id, text);
@@ -399,6 +421,7 @@ function setupReviewInput(recipe) {
 }
 
 function openModal(recipe) {
+    logger.info("open_modal", { recipeId: recipe.id, title: recipe.title });
     var backdrop = document.getElementById("modal-backdrop");
     var content = document.getElementById("modal-content");
     var data = getRatingData(recipe.id);
@@ -454,6 +477,7 @@ function openModal(recipe) {
     var exportBtn = document.getElementById("export-pdf-btn");
     if (exportBtn) {
         exportBtn.addEventListener("click", function () {
+            logger.info("pdf_export", { recipeId: recipe.id, title: recipe.title });
             var originalTitle = document.title;
             document.title = recipe.title;
             window.addEventListener("afterprint", function handler() {
@@ -472,6 +496,7 @@ function openModal(recipe) {
 }
 
 function closeModal() {
+    logger.info("close_modal");
     var backdrop = document.getElementById("modal-backdrop");
     backdrop.classList.remove("visible");
     backdrop.addEventListener("transitionend", function handler() {
@@ -496,6 +521,7 @@ function updateToggleButton() {
 
 function toggleTheme() {
     var newTheme = getTheme() === "dark" ? "light" : "dark";
+    logger.info("toggle_theme", { from: getTheme(), to: newTheme });
     document.documentElement.setAttribute("data-theme", newTheme);
     localStorage.setItem("theme", newTheme);
     updateToggleButton();
@@ -509,15 +535,19 @@ document.addEventListener("DOMContentLoaded", function () {
     renderRecipes();
 
     document.getElementById("search-input").addEventListener("input", function (e) {
-        searchQuery = e.target.value.trim();
+        var input = /** @type {HTMLInputElement} */ (e.target);
+        searchQuery = input.value.trim();
         renderRecipes();
     });
 
     document.getElementById("category-filters").addEventListener("click", function (e) {
-        if (!e.target.matches(".filter-btn")) return;
-        activeCategory = e.target.dataset.category;
+        var target = /** @type {HTMLElement} */ (e.target);
+        if (!target.matches(".filter-btn")) return;
+        activeCategory = target.dataset.category;
+        logger.info("filter_change", { category: activeCategory });
         document.querySelectorAll(".filter-btn").forEach(function (btn) {
-            btn.classList.toggle("active", btn.dataset.category === activeCategory);
+            var b = /** @type {HTMLElement} */ (btn);
+            b.classList.toggle("active", b.dataset.category === activeCategory);
         });
         renderRecipes();
     });
@@ -535,3 +565,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = {
+        loadRatings, saveRatings, addRating, getRatingData, hasRated, getFilteredRecipes, recipes, logger,
+        setActiveCategory: function (v) { activeCategory = v; },
+        setSearchQuery: function (v) { searchQuery = v; }
+    };
+}

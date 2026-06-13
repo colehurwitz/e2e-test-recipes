@@ -250,6 +250,79 @@ def check_pdf_export(css, js):
     }
 
 
+def check_dev_tooling():
+    pkg_path = os.path.join(PROJECT_ROOT, "package.json")
+    eslint_path = os.path.join(PROJECT_ROOT, "eslint.config.mjs")
+    jsconfig_path = os.path.join(PROJECT_ROOT, "jsconfig.json")
+    tests_dir = os.path.join(PROJECT_ROOT, "tests")
+
+    has_package_json = os.path.isfile(pkg_path)
+    has_eslint_config = os.path.isfile(eslint_path)
+    has_jsconfig = os.path.isfile(jsconfig_path)
+    has_tests_dir = os.path.isdir(tests_dir)
+
+    dev_deps_only = False
+    has_test_script = False
+    has_lint_script = False
+    if has_package_json:
+        try:
+            with open(pkg_path, "r", encoding="utf-8") as f:
+                pkg = json.loads(f.read())
+            dev_deps_only = "dependencies" not in pkg and "devDependencies" in pkg
+            scripts = pkg.get("scripts", {})
+            has_test_script = "test" in scripts
+            has_lint_script = "lint" in scripts
+        except (json.JSONDecodeError, IOError):
+            pass
+
+    has_test_files = False
+    if has_tests_dir:
+        for fname in os.listdir(tests_dir):
+            if fname.endswith((".test.js", ".spec.js")):
+                has_test_files = True
+                break
+
+    return {
+        "has_package_json": has_package_json,
+        "has_eslint_config": has_eslint_config,
+        "has_jsconfig": has_jsconfig,
+        "has_tests_dir": has_tests_dir,
+        "dev_deps_only": dev_deps_only,
+        "has_test_script": has_test_script,
+        "has_lint_script": has_lint_script,
+        "has_test_files": has_test_files,
+    }
+
+
+def check_observability(js):
+    if js is None:
+        return {
+            "has_logger_object": False,
+            "has_logger_info": False,
+            "has_logger_warn": False,
+            "has_logger_error": False,
+            "has_window_onerror": False,
+            "instrumentation_count": 0,
+        }
+
+    has_logger_object = "var logger" in js or "const logger" in js or "let logger" in js
+    has_logger_info = "logger.info" in js
+    has_logger_warn = "logger.warn" in js
+    has_logger_error = "logger.error" in js
+    has_window_onerror = "window.onerror" in js
+
+    instrumentation_count = js.count("logger.info(") + js.count("logger.warn(") + js.count("logger.error(")
+
+    return {
+        "has_logger_object": has_logger_object,
+        "has_logger_info": has_logger_info,
+        "has_logger_warn": has_logger_warn,
+        "has_logger_error": has_logger_error,
+        "has_window_onerror": has_window_onerror,
+        "instrumentation_count": instrumentation_count,
+    }
+
+
 def compute_score():
     html = read_file("index.html")
     css = read_file("styles.css")
@@ -265,6 +338,8 @@ def compute_score():
     dark_mode_checks = check_dark_mode(html, css, js)
     rating_checks = check_rating_system(css, js)
     pdf_export_checks = check_pdf_export(css, js)
+    dev_tooling_checks = check_dev_tooling()
+    observability_checks = check_observability(js)
 
     file_score = sum(file_checks.values()) / len(file_checks) if file_checks else 0
 
@@ -303,17 +378,30 @@ def compute_score():
     pdf_export_parts = list(pdf_export_checks.values())
     pdf_export_score = sum(pdf_export_parts) / len(pdf_export_parts) if pdf_export_parts else 0
 
+    dev_tooling_parts = list(dev_tooling_checks.values())
+    dev_tooling_score = sum(dev_tooling_parts) / len(dev_tooling_parts) if dev_tooling_parts else 0
+
+    obs_has_logger = 1.0 if observability_checks["has_logger_object"] else 0.0
+    obs_has_info = 1.0 if observability_checks["has_logger_info"] else 0.0
+    obs_has_warn = 1.0 if observability_checks["has_logger_warn"] else 0.0
+    obs_has_error = 1.0 if observability_checks["has_logger_error"] else 0.0
+    obs_has_onerror = 1.0 if observability_checks["has_window_onerror"] else 0.0
+    obs_instrumentation = min(observability_checks["instrumentation_count"] / 8, 1.0)
+    observability_score = (obs_has_logger + obs_has_info + obs_has_warn + obs_has_error + obs_has_onerror + obs_instrumentation) / 6
+
     composite = (
-        (file_score * 0.07)
-        + (html_score * 0.07)
-        + (css_score * 0.07)
-        + (js_score * 0.11)
-        + (search_score * 0.11)
-        + (filter_score * 0.07)
-        + (detail_score * 0.11)
-        + (dark_mode_score * 0.11)
-        + (rating_score * 0.18)
-        + (pdf_export_score * 0.10)
+        (file_score * 0.06)
+        + (html_score * 0.06)
+        + (css_score * 0.06)
+        + (js_score * 0.09)
+        + (search_score * 0.09)
+        + (filter_score * 0.06)
+        + (detail_score * 0.09)
+        + (dark_mode_score * 0.09)
+        + (rating_score * 0.15)
+        + (pdf_export_score * 0.08)
+        + (dev_tooling_score * 0.09)
+        + (observability_score * 0.08)
     )
 
     return {
@@ -329,6 +417,8 @@ def compute_score():
             "dark_mode": {"score": round(dark_mode_score, 4), "details": dark_mode_checks},
             "rating_system": {"score": round(rating_score, 4), "details": rating_checks},
             "pdf_export": {"score": round(pdf_export_score, 4), "details": pdf_export_checks},
+            "dev_tooling": {"score": round(dev_tooling_score, 4), "details": dev_tooling_checks},
+            "observability": {"score": round(observability_score, 4), "details": observability_checks},
         },
     }
 
