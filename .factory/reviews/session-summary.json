@@ -1,0 +1,50 @@
+{
+  "project_name": "run-97d30847",
+  "generated_at": "2026-06-13 16:28:45.624646+00:00",
+  "mode": "improve",
+  "experiments_kept": [
+    {
+      "id": 1,
+      "timestamp": "2026-06-11 01:34:38.432209",
+      "hypothesis": "Add recipe export to PDF via window.print() and CSS print stylesheet",
+      "change_summary": "Added Export PDF button in recipe detail modal, @media print CSS block for clean recipe output, and check_pdf_export eval dimension with 11 checks. Score: 0.442 \u2192 1.000.",
+      "issue_number": 4,
+      "pr_number": 5,
+      "score_before": null,
+      "score_after": null,
+      "delta": null,
+      "verdict": "keep",
+      "cost_usd": null,
+      "notes": "ceo:keep score_delta=+0.5580 precheck=passed agents_spawned=R,S,B,Rv,E pr_status=open_for_review hypothesis_type=code execution_artifacts=na e2e=pass backlog_cleared=yes review_pipeline=full review_iterations=1 final_review_iterations=3",
+      "research_citations": []
+    }
+  ],
+  "experiments_reverted": [
+    {
+      "id": 2,
+      "timestamp": "2026-06-13 12:24:06.181968",
+      "hypothesis": "Fix XSS vulnerability and add accessibility audit with ARIA, keyboard navigation, and focus management",
+      "change_summary": "XSS fix + accessibility audit \u2014 reverted due to precheck failure",
+      "issue_number": 6,
+      "pr_number": null,
+      "score_before": null,
+      "score_after": null,
+      "delta": null,
+      "verdict": "revert",
+      "cost_usd": null,
+      "notes": "ceo:revert reason=precheck_failed failures=score_direction,scope,smoke_test score_delta=0.0 hypothesis_type=code execution_artifacts=na e2e=pass backlog_cleared=na review_pipeline=full review_iterations=1 final_review_iterations=0 structural_issue=threshold_unreachable",
+      "research_citations": []
+    }
+  ],
+  "experiments_errored": [],
+  "backlog_remaining": [
+    "Add accessibility audit \u2014 ARIA labels, keyboard navigation, contrast ratios in both themes",
+    "Add recipe bookmarking/favorites with localStorage persistence",
+    "Resolve GitHub issue #2 \u2014 close as invalid with explanation (all recipe images are CSS gradients rendered as `background` styles on `<div>` elements; no `<img>` elements or `srcset` attributes exist in the codebase), or redefine as \"Add real recipe images with responsive srcset\" (new feature that would require addressing the self-contained data constraint)"
+  ],
+  "guard_violations": [],
+  "needs_human_input": [],
+  "score_start": null,
+  "score_end": null,
+  "total_cost_usd": null
+}

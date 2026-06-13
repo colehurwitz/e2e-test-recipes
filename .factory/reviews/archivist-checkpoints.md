@@ -1,0 +1,17 @@
+- [x] archivist after research — 2026-06-11T04:20:35Z
+- [x] archivist after strategy — 2026-06-11T04:24:08Z
+- [x] archivist after build phase 1 (H1) — 2026-06-11T04:28:56Z
+- [x] archivist after build phase 2 (H2) — 2026-06-11T04:33:04Z
+- [x] archivist after build phase 3 (H3) — 2026-06-11T04:37:35Z
+- [x] archivist after build phase 4 (H4) — 2026-06-11T04:43:08Z
+- [x] FINAL archivist — 2026-06-11T04:46:42Z
+- [x] archivist after research — 2026-06-11T05:08:17Z
+- [x] archivist after strategy — 2026-06-11T05:11:37Z
+- [x] archivist after build — 2026-06-11T05:18:46Z
+- [x] archivist after experiment 1 (keep) — 2026-06-11T05:35:46Z
+- [x] FINAL archivist — 2026-06-11T05:37:09Z
+- [x] archivist after research — 2026-06-13T16:04:14Z
+- [x] archivist after strategy — 2026-06-13T16:10:22Z
+- [x] archivist after build — 2026-06-13T16:19:30Z
+- [x] archivist after experiment 2 (revert) — 2026-06-13T16:27:01Z
+- [x] FINAL archivist — 2026-06-13T16:28:41Z

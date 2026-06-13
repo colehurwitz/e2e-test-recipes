@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "timestamp": "2026-06-11 01:34:38.432209",
+  "hypothesis": "Add recipe export to PDF via window.print() and CSS print stylesheet",
+  "change_summary": "Added Export PDF button in recipe detail modal, @media print CSS block for clean recipe output, and check_pdf_export eval dimension with 11 checks. Score: 0.442 \u2192 1.000.",
+  "issue_number": 4,
+  "pr_number": 5,
+  "score_before": null,
+  "score_after": null,
+  "delta": null,
+  "verdict": "keep",
+  "cost_usd": null,
+  "notes": "ceo:keep score_delta=+0.5580 precheck=passed agents_spawned=R,S,B,Rv,E pr_status=open_for_review hypothesis_type=code execution_artifacts=na e2e=pass backlog_cleared=yes review_pipeline=full review_iterations=1 final_review_iterations=3",
+  "research_citations": []
+}

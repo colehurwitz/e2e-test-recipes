@@ -1,0 +1,51 @@
+{
+  "goal": "A self-contained recipe viewer web app with search, filtering, dark mode, and 5-star ratings \u2014 built with vanilla HTML/CSS/JS for e2e test demonstration.",
+  "scope": [
+    "index.html",
+    "styles.css",
+    "app.js",
+    "eval/score.py",
+    "factory.md"
+  ],
+  "guards": [
+    "Do not delete or overwrite existing tests",
+    "Do not modify files outside the declared scope",
+    "Do not introduce secrets or credentials into the repository",
+    "Do not add external dependencies (frameworks, build tools, package managers)",
+    "Do not use external APIs for recipe data \u2014 keep data hardcoded"
+  ],
+  "eval_command": "python3 eval/score.py",
+  "eval_threshold": 0.8,
+  "constraints": [
+    "Prefer small, incremental changes over large rewrites",
+    "Keep the app vanilla HTML/CSS/JS \u2014 no frameworks or build tools",
+    "All colors must use CSS custom properties for dark mode compatibility",
+    "Recipe data must be self-contained (hardcoded, no external APIs)"
+  ],
+  "hypothesis_budget": {
+    "min_growth": 2,
+    "max_new": 2
+  },
+  "target_branch": "main",
+  "smoke_test": "python3 -c \"import http.server,socketserver,threading,urllib.request; s=socketserver.TCPServer(('',8766),http.server.SimpleHTTPRequestHandler); t=threading.Thread(target=s.serve_forever,daemon=True); t.start(); r=urllib.request.urlopen('http://localhost:8766/'); assert r.status==200; assert b'Recipe Viewer' in r.read(); s.shutdown(); print('E2E OK')\"",
+  "project_eval": [],
+  "eval_weights": {
+    "hygiene": 0.5,
+    "growth": 0.5,
+    "project": 0.0
+  },
+  "research_target": null,
+  "inner_loop": null,
+  "outer_loop": null,
+  "mutable_surfaces": [],
+  "fixed_surfaces": [],
+  "research_constraints": [],
+  "cost_budget": null,
+  "hard_constraints": [],
+  "eval_spec": [],
+  "hygiene_weights": null,
+  "growth_weights": null,
+  "clean_pr": false,
+  "clean_pr_include": [],
+  "clean_pr_exclude": []
+}

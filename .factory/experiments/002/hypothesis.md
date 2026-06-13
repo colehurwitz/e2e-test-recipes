@@ -1,0 +1,1 @@
+Fix XSS vulnerability and add accessibility audit with ARIA, keyboard navigation, and focus management

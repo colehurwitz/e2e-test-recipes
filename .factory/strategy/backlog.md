@@ -1,0 +1,2 @@
+- Add accessibility audit — ARIA labels, keyboard navigation, contrast ratios in both themes
+- Add recipe bookmarking/favorites with localStorage persistence

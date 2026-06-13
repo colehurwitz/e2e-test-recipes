@@ -1,0 +1,15 @@
+{
+  "id": 2,
+  "timestamp": "2026-06-13 12:24:06.181968",
+  "hypothesis": "Fix XSS vulnerability and add accessibility audit with ARIA, keyboard navigation, and focus management",
+  "change_summary": "XSS fix + accessibility audit \u2014 reverted due to precheck failure",
+  "issue_number": 6,
+  "pr_number": null,
+  "score_before": null,
+  "score_after": null,
+  "delta": null,
+  "verdict": "revert",
+  "cost_usd": null,
+  "notes": "ceo:revert reason=precheck_failed failures=score_direction,scope,smoke_test score_delta=0.0 hypothesis_type=code execution_artifacts=na e2e=pass backlog_cleared=na review_pipeline=full review_iterations=1 final_review_iterations=0 structural_issue=threshold_unreachable",
+  "research_citations": []
+}

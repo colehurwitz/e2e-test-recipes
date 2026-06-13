@@ -1,0 +1,423 @@
+{
+  "project_name": "run-97d30847",
+  "generated_at": "2026-06-13 12:28:30.963877",
+  "total_experiments": 2,
+  "keep_count": 1,
+  "revert_count": 1,
+  "error_count": 0,
+  "keep_rate": 0.5,
+  "latest_score": null,
+  "agent_verdicts": [
+    {
+      "role": "researcher",
+      "verdict": "PROCEED",
+      "rationale": "Research is thorough, well-grounded, and covers all backlog items plus growth dimensions. The XSS finding is a valid security concern that should be addressed. The GitHub issue #2 analysis is convincing \u2014 the bug as described doesn't match the codebase.",
+      "issues": [
+        "None \u2014 research is comprehensive with web sources and archive cross-referencing",
+        "**Instructions for next step:** Strategist should:",
+        "1. Prioritize XSS fix (bundle with first app.js change)",
+        "2. Clear both backlog items (accessibility audit, bookmarking)",
+        "3. Include observability as a growth hypothesis",
+        "4. Close GitHub issue #2 as invalid or redefine it",
+        "5. Follow FEEC ordering as recommended"
+      ],
+      "experiment_id": null
+    },
+    {
+      "role": "reviewer",
+      "verdict": "PROCEED",
+      "rationale": "Reviewer ran factory guard (all 4 checks PASS), performed substantive code review with 7 specific review notes. Not rubber-stamped \u2014 it checked each category. Score improvement confirmed (0.4635 \u2192 1.0).",
+      "issues": [
+        "None",
+        "**Instructions for next step:** Proceed to post-change eval"
+      ],
+      "experiment_id": null
+    },
+    {
+      "role": "strategist",
+      "verdict": "PROCEED",
+      "rationale": "All 3 hypotheses are well-specified, scoped, and follow FEEC ordering. Budget constraints are satisfied (2 backlog items cleared, 1 new item, 3 growth hypotheses with min 2 required). Each hypothesis has specific file-level changes.",
+      "issues": [
+        "None",
+        "**Instructions for next step:** Execute hypotheses in priority order. Each gets full review pipeline."
+      ],
+      "experiment_id": null
+    }
+  ],
+  "observations": [
+    {
+      "source": "observations.md",
+      "content": "# Interaction Study \u2014 run-97d30847: No interaction logs found.",
+      "timestamp": "2026-06-13 12:28:30.958927",
+      "project": "run-97d30847",
+      "tags": [
+        "observation"
+      ]
+    },
+    {
+      "source": "observations.md",
+      "content": "Similar Projects: - [The-Run-Philosophy-Organization/run](https://github.com/The-Run-Philosophy-Organization/run) (32053 stars) \u2014 \u6da6\u5b66\u5168\u7403\u5b98\u65b9\u6307\u5b9aGITHUB\uff0c\u6574\u7406\u6da6\u5b66\u5b97\u65e8\u3001\u7eb2\u9886\u3001\u7406\u8bba\u548c\u5404\u7c7b\u6da6\u4e4b\u5b9e\u4f8b\uff1b\u89e3\u51b3\u4e3a\u4ec0\u4e48\u6da6\uff0c\u6da6\u53bb\u54ea\u91cc\uff0c\u600e\u4e48\u6da6\u4e09\u5927\u95ee\u9898\uff1b \u5e76\u6210\u4e3a\u65b0\u4e2d\u56fd\u4eba\u7684\u6838\u5fc3\u5b97\u6559\uff0c\u6838\u5fc3\u4fe1\u5ff5\u3002\n- [dotnet/runtime](https://github.com/dotnet/runtime) (17959 stars) \u2014 .NET is a cross-platform runtime for cloud, mobile, desktop, and IoT apps.\n- [oklog/run](https://github.com/oklog/run) (1708 stars) \u2014 A universal mechanism to manage goroutine lifecycles\n- [runelite/runelite](https://github.com/runelite/runeli",
+      "timestamp": "2026-06-13 12:28:30.958934",
+      "project": "run-97d30847",
+      "tags": [
+        "observation"
+      ]
+    },
+    {
+      "source": "observations.md",
+      "content": "Open GitHub Issues: ### Your Issues (1) \u2014 actionable, may generate fix hypotheses\n\n- **#2** Fix recipe image not loading on mobile [bug] (by @colehurwitz)\n  > Recipe images fail to load on iOS Safari. The srcset attribute appears to be malformed for mobile viewport sizes.",
+      "timestamp": "2026-06-13 12:28:30.958938",
+      "project": "run-97d30847",
+      "tags": [
+        "observation"
+      ]
+    },
+    {
+      "source": "observations.md",
+      "content": "Backlog: **2 items** in the backlog. Clear as many as possible this cycle.\n\n- Add accessibility audit \u2014 ARIA labels, keyboard navigation, contrast ratios in both themes\n- Add recipe bookmarking/favorites with localStorage persistence",
+      "timestamp": "2026-06-13 12:28:30.958941",
+      "project": "run-97d30847",
+      "tags": [
+        "observation"
+      ]
+    },
+    {
+      "source": "observations.md",
+      "content": "Observability Coverage: - **Score:** 0.0%\n- **Function coverage:** 0/0 functions have logging (0%)\n- **Total log statements:** 0\n- **Structured logging:** No\n- **Request tracing:** No\n\n### Observability Recommendations\n- No source files found to analyze.",
+      "timestamp": "2026-06-13 12:28:30.958944",
+      "project": "run-97d30847",
+      "tags": [
+        "observation"
+      ]
+    },
+    {
+      "source": "observations.md",
+      "content": "Prior Knowledge (Obsidian): No prior notes found.",
+      "timestamp": "2026-06-13 12:28:30.958946",
+      "project": "run-97d30847",
+      "tags": [
+        "observation"
+      ]
+    },
+    {
+      "source": "observations.md",
+      "content": "Hypothesis Budget: **Backlog items: 2** (clear as many as possible this cycle)\n**New items: at most 2** (researcher/strategist may add new ideas)\n**Growth minimum: 2** (at least 2 hypotheses must target growth dimensions)\n\n### Rules\n\n- Read the backlog first. Pick items to implement this cycle \u2014 no cap on clearing.\n- You may add at most 2 NEW items that aren't already in the backlog.\n- At least 2 hypotheses must target growth dimensions (capability_surface, factory_effectiveness, research_grounding, experiment_div",
+      "timestamp": "2026-06-13 12:28:30.958951",
+      "project": "run-97d30847",
+      "tags": [
+        "observation"
+      ]
+    },
+    {
+      "source": ".factory/archive/e2e-test-recipes.md",
+      "content": "---\ntags:\n  - factory\n  - project\n  - e2e-test-recipes\nsource: factory-archivist\n---\n\n# Factory: e2e-test-recipes\n\n## Summary\n\nDemo/test recipe viewer application \u2014 vanilla HTML/CSS/JS, no frameworks, no build tools. Used to validate factory automation workflows.\n\n## Status\n- **State**: BLOCKED \u2014 structural threshold prevents all experiments in run-97d30847\n- **Current Score**: project eval 1.0 (10 dimensions), factory composite 0.4635\n- **Experiments Run**: 6\n- **Kept**: 5, **Reverted**: 1\n- **",
+      "timestamp": "2026-06-13 12:28:30.959422",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/experiments/e2e-test-recipes-001.md",
+      "content": "---\ntags:\n  - factory\n  - experiment\n  - e2e-test-recipes\nproject: e2e-test-recipes\nexperiment_id: 1\nverdict: KEEP\nscore_delta: \"+1.0\"\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# Experiment #1: Project scaffold and eval harness (H1)\n\n## Hypothesis\nCreate the project skeleton \u2014 index.html with semantic HTML structure, styles.css with CSS custom properties (light theme defaults, prepared for dark mode), app.js with module structure and 6 hardcoded recipes, and eval/score.py that validates fi",
+      "timestamp": "2026-06-13 12:28:30.959628",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/experiments/e2e-test-recipes-002.md",
+      "content": "---\ntags:\n  - factory\n  - experiment\n  - e2e-test-recipes\nproject: e2e-test-recipes\nexperiment_id: 2\nverdict: KEEP\nscore_delta: +0.0 (maintained 1.0 across expanded eval)\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# Experiment #2: Recipe Viewer MVP (H2)\n\n## Hypothesis\nAdding search, category filtering, and a detail modal will bring the app from a static card display to an interactive viewer, raising capability_surface from ~0.1 to ~0.5.\n\n## Result\n**KEEP** \u2014 composite score 1.0 across all 7",
+      "timestamp": "2026-06-13 12:28:30.959797",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/experiments/e2e-test-recipes-003.md",
+      "content": "---\ntags:\n  - factory\n  - experiment\n  - e2e-test-recipes\nproject: e2e-test-recipes\nexperiment_id: 3\nverdict: KEEP\nscore_delta: +0.0\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# Experiment #3: Dark Mode Toggle (H3)\n\n## Hypothesis\nAdding a dark mode toggle with CSS custom properties, FOUC prevention, and localStorage persistence will increase capability_surface while maintaining existing eval score.\n\n## Result\n**KEEP** \u2014 composite score 1.0 maintained (was 1.0). Eval expanded from 7 to 8 dim",
+      "timestamp": "2026-06-13 12:28:30.959968",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/experiments/e2e-test-recipes-004.md",
+      "content": "---\ntags:\n  - factory\n  - experiment\n  - e2e-test-recipes\nproject: e2e-test-recipes\nexperiment_id: 4\nverdict: KEEP\nscore_delta: \"+0.0 (1.0 maintained)\"\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# Experiment #4: Recipe Rating System (H4)\n\n## Hypothesis\nAdd a 5-star interactive rating system with text reviews and localStorage persistence, completing the 4-phase build plan.\n\n## Result\n**KEEP** \u2014 score maintained at 1.0 (all 9 eval dimensions pass)\n\n## What Changed\n\n### Features Added\n| Featur",
+      "timestamp": "2026-06-13 12:28:30.960115",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/experiments/e2e-test-recipes-005.md",
+      "content": "---\ntags:\n  - factory\n  - experiment\n  - e2e-test-recipes\nproject: e2e-test-recipes\nexperiment_id: 5\nverdict: KEEP\nscore_delta: \"+0.558 (0.442 \u2192 1.000)\"\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# Experiment #5: Add recipe export to PDF via print stylesheet and window.print()\n\n## Hypothesis\nH1 (run-93866f8f) \u2014 Add recipe export to PDF using `window.print()` + CSS `@media print` stylesheet. Zero-dependency solution chosen because factory.md guards prohibit adding external libraries (jsPDF/h",
+      "timestamp": "2026-06-13 12:28:30.960257",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/experiments/e2e-test-recipes-006.md",
+      "content": "---\ntags:\n  - factory\n  - experiment\n  - e2e-test-recipes\nproject: e2e-test-recipes\nexperiment_id: 6\nverdict: REVERT\nscore_delta: \"N/A \u2014 precheck failed before merge (factory composite 0.4635 < 0.8 threshold)\"\ndate: 2026-06-13\nsource: factory-archivist\n---\n\n# Experiment #6: Fix XSS vulnerability and add accessibility audit\n\n## Hypothesis\nH1 (run-97d30847): Fix XSS in `buildReviewsHTML()` via DOM API migration + comprehensive accessibility audit (skip link, keyboard nav, ARIA attributes, focus ma",
+      "timestamp": "2026-06-13 12:28:30.960291",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/experiments/e2e-test-recipes-cycle-summary.md",
+      "content": "---\ntags:\n  - factory\n  - experiment\n  - cycle-summary\n  - e2e-test-recipes\nproject: e2e-test-recipes\ncycle: build\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# Build Cycle Summary: e2e-test-recipes (2026-06-11)\n\n## Overview\n\nComplete greenfield build cycle of a recipe viewer web application. 4 sequential phases, all kept, 0 reverts. The cycle validated the factory's Build mode workflow end-to-end: research \u2192 strategy \u2192 phased implementation \u2192 eval \u2192 archive.\n\n## Cycle Metrics\n\n| Metric | Va",
+      "timestamp": "2026-06-13 12:28:30.960455",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/experiments/e2e-test-recipes-pdf-export-cycle-summary.md",
+      "content": "---\ntags:\n  - factory\n  - cycle-summary\n  - e2e-test-recipes\nproject: e2e-test-recipes\ncycle: pdf-export\nrun: run-93866f8f\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# PDF Export Cycle Summary: e2e-test-recipes / run-93866f8f (2026-06-11)\n\n## Overview\n\nSingle-experiment improvement cycle adding recipe export to PDF via `window.print()` and CSS `@media print` stylesheet. Zero-dependency approach chosen because factory.md guards prohibit adding external libraries. Experiment kept, PR #5 opene",
+      "timestamp": "2026-06-13 12:28:30.960598",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/experiments/e2e-test-recipes-run-97d30847-cycle-summary.md",
+      "content": "---\ntags:\n  - factory\n  - experiment\n  - cycle-summary\n  - e2e-test-recipes\nproject: e2e-test-recipes\nrun_id: run-97d30847\ndate: 2026-06-13\nverdict: BLOCKED\nexperiments_planned: 3\nexperiments_run: 1\nexperiments_kept: 0\nexperiments_reverted: 1\nexperiments_skipped: 2\nsource: factory-archivist\n---\n\n# Cycle Summary: e2e-test-recipes \u2014 run-97d30847\n\n## Overview\n\n**Cycle type**: Improve\n**Run ID**: run-97d30847\n**Date**: 2026-06-13\n**Outcome**: BLOCKED \u2014 all 3 hypotheses failed due to structural thres",
+      "timestamp": "2026-06-13 12:28:30.960637",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/patterns/patterns.md",
+      "content": "---\ntags:\n  - factory\n  - patterns\nsource: factory-archivist\n---\n\n# Cross-Project Patterns\n\n## Greenfield Projects Need Base App Before Backlog\nDiscovered in e2e-test-recipes research (2026-06-11).\nWhen a project backlog assumes existing features (e.g., \"add dark mode to recipe viewer\"), the factory must first build the base application before addressing any backlog items. Strategy should explicitly phase: scaffold + eval harness first, then MVP, then backlog features.\n\n## Vanilla Stack for Demo",
+      "timestamp": "2026-06-13 12:28:30.960678",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/accessibility-audit-vanilla-js.md",
+      "content": "---\ntags:\n  - factory\n  - source\nsource: factory-archivist\ndate: 2026-06-13\n---\n\n# Accessibility Audit Implementation \u2014 Vanilla JS\n\n## Finding\nThe recipe viewer had zero accessibility support: cards were div-only (no keyboard access), modal had no focus management, filters had no ARIA state, star rating lacked semantic roles, and there was no skip-to-content link or focus-visible styles.\n\n## Implementation Summary\n\n### Skip-to-content\n- `<a href=\"#main-content\" class=\"skip-link\">Skip to content<",
+      "timestamp": "2026-06-13 12:28:30.960811",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/accessibility-vanilla-js-modals.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - accessibility\n  - vanilla-js\nsource: factory-archivist\ndate: 2026-06-13\n---\n\n# Accessibility Best Practices: Vanilla JS Modals & Interactive Elements\n\n## Focus Management in Modals\n\nThe #1 accessibility concern for the recipe viewer app:\n\n- Use `role=\"dialog\"`, `aria-modal=\"true\"`, and `aria-labelledby` referencing the modal title (partially done in current app)\n- Implement a focus trap: on modal open, move focus to the first focusable element; on Tab at the ",
+      "timestamp": "2026-06-13 12:28:30.960963",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/css-print-stylesheet-best-practices.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - e2e-test-recipes\nsource: factory-archivist\ndate: 2026-06-11\n---\n\n# CSS Print Stylesheet Best Practices\n\n## Summary\n\nBest practices for CSS `@media print` stylesheets, specifically applied to isolating modal content for recipe PDF export.\n\n## Key Techniques\n\n### Hiding Non-Print Elements\nUse `visibility: hidden` on `body *` and `visibility: visible` on the target section. This is more reliable than `display: none` because `display: none` on a parent prevents c",
+      "timestamp": "2026-06-13 12:28:30.961094",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/dark-mode-best-practices.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - e2e-test-recipes\nsource: factory-archivist\ndate: 2026-06-11\n---\n\n# Dark Mode Implementation Best Practices\n\nResearch into dark mode toggle implementation for vanilla HTML/CSS/JS apps.\n\n## Key Findings\n\n- **CSS custom properties (variables)** on `:root` with a `color-mode` attribute \u2014 define light/dark palettes as variable sets\n- **Toggle via data attribute** on `<html>` element (e.g., `data-theme=\"dark\"`)\n- **localStorage persistence** so the choice survives ",
+      "timestamp": "2026-06-13 12:28:30.961233",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/eval-strategy-vanilla-app.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - e2e-test-recipes\nsource: factory-archivist\ndate: 2026-06-11\n---\n\n# Evaluation Strategy for Vanilla HTML/CSS/JS App\n\nResearch into practical evaluation approaches for a demo recipe app with no build tools.\n\n## Key Findings\n\n- **Functional correctness**: Does the app render recipes? Does dark mode toggle work? Do ratings persist?\n- **HTML validation**: W3C validator or html-validate\n- **CSS quality**: Stylelint for consistency\n- **JavaScript quality**: ESLint w",
+      "timestamp": "2026-06-13 12:28:30.961417",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/five-star-rating-system.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - e2e-test-recipes\nsource: factory-archivist\ndate: 2026-06-11\n---\n\n# 5-Star Rating System Implementation\n\nResearch into implementing a 5-star rating and review system for a vanilla HTML/CSS/JS recipe app.\n\n## Key Findings\n\n- **Radio button + label approach** (pure CSS): Hidden radio inputs with styled labels using the `~` sibling selector \u2014 clean, accessible, no JS needed for display\n- **Unicode star characters** (`&#9733;` / `&#9734;`) with `data-value` attrib",
+      "timestamp": "2026-06-13 12:28:30.961567",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/github-issue-2-srcset-analysis.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - e2e-test-recipes\n  - github-issue\nsource: factory-archivist\ndate: 2026-06-13\n---\n\n# GitHub Issue #2: Recipe Image Not Loading on Mobile \u2014 Invalid\n\n## Finding\n\nIssue #2 (\"Fix recipe image not loading on mobile\") describes malformed `srcset` attributes causing image load failures on iOS Safari. This does **not match** the current codebase \u2014 there are no `<img>` elements and no `srcset` attributes anywhere in the code.\n\nAll recipe \"images\" are CSS gradients rend",
+      "timestamp": "2026-06-13 12:28:30.961708",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/localstorage-bookmarking-favorites.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - bookmarking\n  - localstorage\nsource: factory-archivist\ndate: 2026-06-13\n---\n\n# localStorage Bookmarking/Favorites Pattern\n\n## Standard Pattern for Vanilla JS\n\n1. **Data structure**: Store an array of recipe IDs as JSON: `JSON.parse(localStorage.getItem('favorites')) || []`\n2. **Toggle pattern**: Click handler checks if ID exists in array \u2014 if yes, splice/filter it out; if no, push it in. Re-serialize and save.\n3. **Render sync**: On page load, read favorites ",
+      "timestamp": "2026-06-13 12:28:30.961853",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/modal-content-print-isolation.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - e2e-test-recipes\nsource: factory-archivist\ndate: 2026-06-11\n---\n\n# Printing Only Modal Content\n\n## Summary\n\nTechniques for isolating modal content when using `window.print()`, so only the recipe detail (not the full page) appears in the PDF output.\n\n## Approaches\n\n### Approach A \u2014 CSS Visibility Trick (Recommended)\nHide all body children via `visibility: hidden`, then make the modal content visible and absolutely positioned at (0,0). No JavaScript DOM manipul",
+      "timestamp": "2026-06-13 12:28:30.961997",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/native-dialog-element-modals.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - e2e-test-recipes\n  - accessibility\nsource: factory-archivist\ndate: 2026-06-13\n---\n\n# Native `<dialog>` Element for Accessible Modals\n\n## Finding\n\nThe HTML `<dialog>` element with `showModal()` is the modern standard for accessible modals (97% browser support as of 2026). It provides:\n\n- Built-in focus trapping (browser-managed, no custom JS)\n- Automatic `role=\"dialog\"` and `aria-modal=\"true\"`\n- Native Escape key dismissal\n- `::backdrop` pseudo-element for ove",
+      "timestamp": "2026-06-13 12:28:30.962141",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/observability-structured-logging-vanilla-js.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - observability\n  - logging\nsource: factory-archivist\ndate: 2026-06-13\n---\n\n# Observability: Structured Logging for Vanilla JS\n\n## Context\n\nThe app currently has zero log statements, no structured logging, and no error handling instrumentation. The factory eval's observability dimension scores 0.0. For a demo/test app with no backend, full observability tooling is overkill \u2014 but basic instrumentation satisfies the growth dimension.\n\n## Recommended Approach (Zer",
+      "timestamp": "2026-06-13 12:28:30.962269",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/recipe-viewer-app-patterns.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - e2e-test-recipes\nsource: factory-archivist\ndate: 2026-06-11\n---\n\n# Recipe Viewer App Patterns\n\nSurvey of ~10 recipe viewer implementations from tutorials and GitHub projects.\n\n## Key Findings\n\n- **Vanilla HTML/CSS/JS** is the dominant approach for simple recipe apps \u2014 no framework needed\n- Most tutorials use a **single HTML file** with JS-driven rendering for simplicity\n- Data sources: hardcoded JSON, local JSON file, or external API (TheMealDB is popular but",
+      "timestamp": "2026-06-13 12:28:30.962415",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/wcag-contrast-dark-mode.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - e2e-test-recipes\n  - accessibility\nsource: factory-archivist\ndate: 2026-06-13\n---\n\n# WCAG 2.2 Contrast Requirements for Dark Mode\n\n## Finding\n\nBoth light and dark themes must independently meet WCAG AA contrast requirements:\n\n- Normal text: 4.5:1 minimum\n- Large text (18pt+ or 14pt bold+): 3:1\n- UI components and borders: 3:1\n- Focus indicators: 3:1 against adjacent colors (new in WCAG 2.2)\n\n## Project-Specific Concerns\n\nThe following color pairings in the cu",
+      "timestamp": "2026-06-13 12:28:30.962557",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/window-print-pdf-export.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - e2e-test-recipes\nsource: factory-archivist\ndate: 2026-06-11\n---\n\n# window.print() + CSS @media print for PDF Export\n\n## Summary\n\nThe browser's native `window.print()` API combined with CSS `@media print` rules is the only viable zero-dependency approach for exporting recipe content to PDF. When called, it opens the browser's print dialog which includes a \"Save as PDF\" destination on all major desktop browsers.\n\n## Key Findings\n\n- **No external dependencies ne",
+      "timestamp": "2026-06-13 12:28:30.962688",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/xss-fix-dom-api.md",
+      "content": "---\ntags:\n  - factory\n  - source\nsource: factory-archivist\ndate: 2026-06-13\n---\n\n# XSS Fix via DOM API Migration\n\n## Finding\nThe `buildReviewsHTML()` function at app.js:316-318 concatenated user-supplied review text directly into an innerHTML assignment via string concatenation: `'<div class=\"review-text\">' + r.text + '</div>'`. This is a textbook stored XSS vulnerability \u2014 any user who enters `<script>` tags or event handlers in a review can execute arbitrary JavaScript.\n\n## Fix Applied\nRenamed",
+      "timestamp": "2026-06-13 12:28:30.962830",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/sources/xss-vulnerability-review-rendering.md",
+      "content": "---\ntags:\n  - factory\n  - source\n  - e2e-test-recipes\n  - security\nsource: factory-archivist\ndate: 2026-06-13\n---\n\n# XSS Vulnerability in Review Rendering\n\n## Finding\n\n`app.js:316-318` \u2014 `buildReviewsHTML()` inserts user-submitted review text directly into innerHTML without escaping:\n\n```js\nreturn '<div class=\"review-item\"><div class=\"review-text\">' + r.text + '</div></div>';\n```\n\nThe review text comes from a `<textarea>` and is stored in localStorage. A user can inject arbitrary HTML/JS via the",
+      "timestamp": "2026-06-13 12:28:30.962973",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/strategies/e2e-test-recipes-2026-06-11-final.md",
+      "content": "---\ntags:\n  - factory\n  - strategy\n  - e2e-test-recipes\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# Strategy: e2e-test-recipes \u2014 2026-06-11 (Build Complete)\n\n## Build Plan Status: ALL 4 PHASES COMPLETE\n\n| Phase | Hypothesis | Status | Score |\n|---|---|---|---|\n| H1 | Scaffold + eval harness | DONE | 1.0 |\n| H2 | Recipe Viewer MVP (search, filter, modal) | DONE | 1.0 |\n| H3 | Dark Mode Toggle (CSS vars, FOUC prevention) | DONE | 1.0 |\n| H4 | Recipe Rating System (5-star, reviews, localStora",
+      "timestamp": "2026-06-13 12:28:30.963125",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/strategies/e2e-test-recipes-2026-06-11-pdf-export.md",
+      "content": "---\ntags:\n  - factory\n  - strategy\n  - e2e-test-recipes\ndate: 2026-06-11\nsource: factory-archivist\nrun: run-93866f8f\n---\n\n# Strategy: e2e-test-recipes \u2014 2026-06-11 (PDF Export Cycle)\n\n## Mode\nTargeted \u2014 single backlog item: \"Add recipe export to PDF feature\"\n\n## Context\n- Composite score: 0.44 (passed: false)\n- Weakest dimensions: capability_surface (0.0), observability (0.0)\n- All 4 prior build phases shipped successfully (H1\u2013H4)\n- App is feature-complete for initial scope; this cycle adds PDF ",
+      "timestamp": "2026-06-13 12:28:30.963265",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/strategies/e2e-test-recipes-2026-06-11-post-h1.md",
+      "content": "---\ntags:\n  - factory\n  - strategy\n  - e2e-test-recipes\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# Strategy: e2e-test-recipes \u2014 2026-06-11 (Post-H1)\n\n## Current State\nPhase 1 (H1) complete. Project scaffold and eval harness are in place with a composite score of 1.0. All 4 eval dimensions pass: file existence, HTML structure, CSS custom properties, and JS recipe data.\n\n## Next Up: H2 \u2014 Recipe Viewer MVP\nThe immediate next step is H2: build the complete recipe viewer with card layout (CSS ",
+      "timestamp": "2026-06-13 12:28:30.963398",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/strategies/e2e-test-recipes-2026-06-11-post-h2.md",
+      "content": "---\ntags:\n  - factory\n  - strategy\n  - e2e-test-recipes\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# Strategy: e2e-test-recipes \u2014 2026-06-11 (Post-H2)\n\n## Current State\n- **Phase**: H2 complete (2 of 4 phases done)\n- **Score**: 1.0 composite across 7 eval dimensions\n- **Build velocity**: 2 phases completed in single session\n\n## Completed\n1. **H1 \u2014 Scaffold + eval harness** (commit 3bf5c9c) \u2014 DONE, score 1.0\n2. **H2 \u2014 Recipe Viewer MVP** (commit e47e7c6) \u2014 DONE, score 1.0\n\n## Next Up\n3. **H3",
+      "timestamp": "2026-06-13 12:28:30.963540",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/strategies/e2e-test-recipes-2026-06-11-post-h3.md",
+      "content": "---\ntags:\n  - factory\n  - strategy\n  - e2e-test-recipes\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# Strategy: e2e-test-recipes \u2014 2026-06-11 (Post-H3)\n\n## Current State\n- **Phase**: H3 complete, H4 remaining\n- **Score**: 1.0 composite (8 dimensions, all at 1.0)\n- **Experiments**: 3 run, 3 kept, 0 reverted\n\n## Completed Phases\n1. **H1 \u2014 Scaffold + eval harness** \u2014 DONE (score: 1.0)\n2. **H2 \u2014 Recipe Viewer MVP** \u2014 DONE (search, filter, modal; score: 1.0)\n3. **H3 \u2014 Dark Mode Toggle** \u2014 DONE (C",
+      "timestamp": "2026-06-13 12:28:30.963668",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/strategies/e2e-test-recipes-2026-06-11.md",
+      "content": "---\ntags:\n  - factory\n  - strategy\n  - e2e-test-recipes\ndate: 2026-06-11\nsource: factory-archivist\n---\n\n# Strategy: e2e-test-recipes \u2014 2026-06-11\n\n## CEO Verdict\n**APPROVED** \u2014 Plan is well-structured with 4 right-sized phases in correct dependency order.\n\n## Build Plan (4 Phases, Sequential)\n\n### Phase 1 (H1): Project scaffold and eval harness\n- **Category:** EXPLORE | **Growth:** factory_effectiveness\n- Create `index.html` (semantic HTML), `styles.css` (CSS custom properties), `app.js` (module",
+      "timestamp": "2026-06-13 12:28:30.963797",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "source": ".factory/archive/strategies/e2e-test-recipes-2026-06-13.md",
+      "content": "---\ntags:\n  - factory\n  - strategy\n  - e2e-test-recipes\ndate: 2026-06-13\nsource: factory-archivist\n---\n\n# Strategy: e2e-test-recipes \u2014 2026-06-13\n\n## CEO Verdict: PROCEED\n\nAll 3 hypotheses approved. No issues found. Execute in priority order \u2014 each gets full review pipeline.\n\n## Context\n\n- **Composite score**: 0.4635 (project eval 1.0 across 10 dimensions; growth metrics drag composite)\n- **Weakest dimensions**: capability_surface (0.0), observability (0.0)\n- **Experiments to date**: 5 kept, 0 r",
+      "timestamp": "2026-06-13 12:28:30.963836",
+      "project": "run-97d30847",
+      "tags": [
+        "archive"
+      ]
+    }
+  ],
+  "verdict_patterns": {
+    "researcher:PROCEED": 1,
+    "reviewer:PROCEED": 1,
+    "strategist:PROCEED": 1
+  }
+}
