@@ -162,6 +162,7 @@ const recipes = [
 
 let activeCategory = "All";
 let searchQuery = "";
+var modalTrigger = null;
 
 function loadRatings() {
     try {
@@ -287,8 +288,17 @@ function renderRecipeCard(recipe) {
             </div>
         </div>
     `;
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", recipe.title);
     card.addEventListener("click", function () {
         openModal(recipe);
+    });
+    card.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openModal(recipe);
+        }
     });
     return card;
 }
@@ -309,13 +319,24 @@ function renderRecipes() {
     });
 }
 
-function buildReviewsHTML(recipeId) {
+function buildReviewsDOM(recipeId) {
     var reviews = getReviews(recipeId);
-    if (reviews.length === 0) return "";
-    var items = reviews.map(function (r) {
-        return '<div class="review-item"><div class="review-text">' + r.text + '</div></div>';
-    }).join("");
-    return '<div class="recent-reviews"><h4>Recent Reviews</h4>' + items + '</div>';
+    if (reviews.length === 0) return null;
+    var container = document.createElement("div");
+    container.className = "recent-reviews";
+    var heading = document.createElement("h4");
+    heading.textContent = "Recent Reviews";
+    container.appendChild(heading);
+    reviews.forEach(function (r) {
+        var item = document.createElement("div");
+        item.className = "review-item";
+        var text = document.createElement("div");
+        text.className = "review-text";
+        text.textContent = r.text;
+        item.appendChild(text);
+        container.appendChild(item);
+    });
+    return container;
 }
 
 function setupModalRating(recipe) {
@@ -355,6 +376,13 @@ function setupModalRating(recipe) {
                 }
             });
 
+            star.addEventListener("keydown", function (e) {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    star.click();
+                }
+            });
+
             star.addEventListener("click", function () {
                 if (container.classList.contains("rated")) return;
                 var val = parseInt(star.getAttribute("data-value"));
@@ -363,7 +391,9 @@ function setupModalRating(recipe) {
                 for (var j = 0; j < stars.length; j++) {
                     stars[j].classList.remove("hover");
                     var sv = parseInt(stars[j].getAttribute("data-value"));
-                    stars[j].classList.toggle("active", sv <= val);
+                    var isChosen = sv <= val;
+                    stars[j].classList.toggle("active", isChosen);
+                    stars[j].setAttribute("aria-checked", isChosen ? "true" : "false");
                 }
                 var thanks = document.getElementById("rating-thanks");
                 if (thanks) thanks.style.display = "block";
@@ -393,12 +423,15 @@ function setupReviewInput(recipe) {
         textarea.value = "";
         var reviewsContainer = document.getElementById("modal-reviews");
         if (reviewsContainer) {
-            reviewsContainer.innerHTML = buildReviewsHTML(recipe.id);
+            reviewsContainer.innerHTML = "";
+            var reviewsDOM = buildReviewsDOM(recipe.id);
+            if (reviewsDOM) reviewsContainer.appendChild(reviewsDOM);
         }
     });
 }
 
 function openModal(recipe) {
+    modalTrigger = document.activeElement;
     var backdrop = document.getElementById("modal-backdrop");
     var content = document.getElementById("modal-content");
     var data = getRatingData(recipe.id);
@@ -410,8 +443,9 @@ function openModal(recipe) {
     var starsHTML = "";
     for (var i = 1; i <= 5; i++) {
         var cls = "star";
-        if (rated && i <= Math.round(data.average)) cls += " active";
-        starsHTML += '<span class="' + cls + '" data-value="' + i + '">★</span>';
+        var isActive = rated && i <= Math.round(data.average);
+        if (isActive) cls += " active";
+        starsHTML += '<span class="' + cls + '" data-value="' + i + '" role="radio" aria-checked="' + (isActive ? 'true' : 'false') + '" aria-label="' + i + ' star' + (i > 1 ? 's' : '') + '" tabindex="0">★</span>';
     }
 
     content.innerHTML = `
@@ -426,7 +460,7 @@ function openModal(recipe) {
             <button class="export-pdf-btn" id="export-pdf-btn">🖨️ Export PDF</button>
             <div class="modal-rating">
                 <div class="rating-label">Rate this recipe</div>
-                <div class="star-rating${rated ? ' rated' : ''}" id="modal-star-rating">
+                <div class="star-rating${rated ? ' rated' : ''}" id="modal-star-rating" role="radiogroup" aria-label="Rate this recipe">
                     ${starsHTML}
                 </div>
                 <div class="rating-thanks" id="rating-thanks" style="display:${rated ? 'block' : 'none'}">Thanks for rating!</div>
@@ -436,7 +470,7 @@ function openModal(recipe) {
                     <button id="review-submit">Submit Review</button>
                 </div>
             </div>
-            <div id="modal-reviews">${buildReviewsHTML(recipe.id)}</div>
+            <div id="modal-reviews"></div>
             <h3 class="modal-section-title">Ingredients</h3>
             <ul class="modal-ingredients">
                 ${recipe.ingredients.map(function (i) { return "<li>" + i + "</li>"; }).join("")}
@@ -447,6 +481,10 @@ function openModal(recipe) {
             </ol>
         </div>
     `;
+
+    var reviewsDOM = buildReviewsDOM(recipe.id);
+    var reviewsContainer = document.getElementById("modal-reviews");
+    if (reviewsDOM) reviewsContainer.appendChild(reviewsDOM);
 
     setupModalRating(recipe);
     setupReviewInput(recipe);
@@ -469,6 +507,7 @@ function openModal(recipe) {
         backdrop.classList.add("visible");
     });
     document.body.style.overflow = "hidden";
+    document.getElementById("modal-close").focus();
 }
 
 function closeModal() {
@@ -480,6 +519,10 @@ function closeModal() {
         document.getElementById("modal-content").innerHTML = "";
     });
     document.body.style.overflow = "";
+    if (modalTrigger) {
+        modalTrigger.focus();
+        modalTrigger = null;
+    }
 }
 
 function getTheme() {
@@ -506,6 +549,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
 
+    document.querySelectorAll(".filter-btn").forEach(function (btn) {
+        btn.setAttribute("aria-pressed", btn.classList.contains("active") ? "true" : "false");
+    });
+
     renderRecipes();
 
     document.getElementById("search-input").addEventListener("input", function (e) {
@@ -517,7 +564,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!e.target.matches(".filter-btn")) return;
         activeCategory = e.target.dataset.category;
         document.querySelectorAll(".filter-btn").forEach(function (btn) {
-            btn.classList.toggle("active", btn.dataset.category === activeCategory);
+            var isActive = btn.dataset.category === activeCategory;
+            btn.classList.toggle("active", isActive);
+            btn.setAttribute("aria-pressed", isActive ? "true" : "false");
         });
         renderRecipes();
     });

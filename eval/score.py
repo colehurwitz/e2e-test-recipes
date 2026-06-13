@@ -250,6 +250,47 @@ def check_pdf_export(css, js):
     }
 
 
+def check_accessibility(html, css, js):
+    html_has_skip_link = False
+    html_has_aria_live = False
+    if html:
+        html_has_skip_link = "skip-link" in html
+        html_has_aria_live = "aria-live" in html
+
+    css_has_skip_link_styles = False
+    css_has_focus_visible = False
+    if css:
+        css_has_skip_link_styles = ".skip-link" in css
+        css_has_focus_visible = "focus-visible" in css
+
+    js_has_tabindex_on_cards = False
+    js_has_keyboard_handlers = False
+    js_has_aria_pressed = False
+    js_has_focus_management = False
+    js_has_xss_fix = False
+    js_has_radiogroup = False
+    if js:
+        js_has_tabindex_on_cards = "tabindex" in js
+        js_has_keyboard_handlers = "keydown" in js and ("Enter" in js and (" " in js or "Space" in js))
+        js_has_aria_pressed = "aria-pressed" in js
+        js_has_focus_management = ".focus()" in js
+        js_has_xss_fix = "textContent" in js and "createElement" in js
+        js_has_radiogroup = "radiogroup" in js
+
+    return {
+        "html_has_skip_link": html_has_skip_link,
+        "html_has_aria_live": html_has_aria_live,
+        "css_has_skip_link_styles": css_has_skip_link_styles,
+        "css_has_focus_visible": css_has_focus_visible,
+        "js_has_tabindex_on_cards": js_has_tabindex_on_cards,
+        "js_has_keyboard_handlers": js_has_keyboard_handlers,
+        "js_has_aria_pressed": js_has_aria_pressed,
+        "js_has_focus_management": js_has_focus_management,
+        "js_has_xss_fix": js_has_xss_fix,
+        "js_has_radiogroup": js_has_radiogroup,
+    }
+
+
 def compute_score():
     html = read_file("index.html")
     css = read_file("styles.css")
@@ -265,6 +306,7 @@ def compute_score():
     dark_mode_checks = check_dark_mode(html, css, js)
     rating_checks = check_rating_system(css, js)
     pdf_export_checks = check_pdf_export(css, js)
+    accessibility_checks = check_accessibility(html, css, js)
 
     file_score = sum(file_checks.values()) / len(file_checks) if file_checks else 0
 
@@ -303,17 +345,21 @@ def compute_score():
     pdf_export_parts = list(pdf_export_checks.values())
     pdf_export_score = sum(pdf_export_parts) / len(pdf_export_parts) if pdf_export_parts else 0
 
+    accessibility_parts = list(accessibility_checks.values())
+    accessibility_score = sum(accessibility_parts) / len(accessibility_parts) if accessibility_parts else 0
+
     composite = (
-        (file_score * 0.07)
-        + (html_score * 0.07)
-        + (css_score * 0.07)
-        + (js_score * 0.11)
-        + (search_score * 0.11)
-        + (filter_score * 0.07)
-        + (detail_score * 0.11)
-        + (dark_mode_score * 0.11)
-        + (rating_score * 0.18)
-        + (pdf_export_score * 0.10)
+        (file_score * 0.06)
+        + (html_score * 0.06)
+        + (css_score * 0.06)
+        + (js_score * 0.10)
+        + (search_score * 0.10)
+        + (filter_score * 0.06)
+        + (detail_score * 0.10)
+        + (dark_mode_score * 0.10)
+        + (rating_score * 0.16)
+        + (pdf_export_score * 0.09)
+        + (accessibility_score * 0.11)
     )
 
     return {
@@ -329,6 +375,7 @@ def compute_score():
             "dark_mode": {"score": round(dark_mode_score, 4), "details": dark_mode_checks},
             "rating_system": {"score": round(rating_score, 4), "details": rating_checks},
             "pdf_export": {"score": round(pdf_export_score, 4), "details": pdf_export_checks},
+            "accessibility": {"score": round(accessibility_score, 4), "details": accessibility_checks},
         },
     }
 

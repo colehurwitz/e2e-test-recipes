@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <header class="site-header">
         <h1 class="site-title">Recipe Viewer</h1>
         <div class="header-controls">
@@ -28,7 +29,7 @@
         </div>
     </header>
 
-    <main class="main-content">
+    <main class="main-content" id="main-content">
         <nav class="category-filters" id="category-filters" aria-label="Filter by category">
             <button class="filter-btn active" data-category="All">All</button>
             <button class="filter-btn" data-category="Breakfast">Breakfast</button>
@@ -37,7 +38,7 @@
             <button class="filter-btn" data-category="Dessert">Dessert</button>
         </nav>
 
-        <section class="recipe-grid" id="recipe-grid">
+        <section class="recipe-grid" id="recipe-grid" aria-live="polite">
         </section>
     </main>
 
