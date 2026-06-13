@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Browse and discover delicious recipes">
+    <title>Recipe Viewer</title>
+    <script>
+        (function() {
+            var theme = localStorage.getItem("theme");
+            if (!theme) {
+                theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            }
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <h1 class="site-title">Recipe Viewer</h1>
+        <div class="header-controls">
+            <div class="search-wrapper">
+                <input type="text" id="search-input" class="search-input" placeholder="Search recipes..." aria-label="Search recipes">
+            </div>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Switch to dark mode">☀️</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <nav class="category-filters" id="category-filters" aria-label="Filter by category">
+            <button class="filter-btn active" data-category="All">All</button>
+            <button class="filter-btn" data-category="Breakfast">Breakfast</button>
+            <button class="filter-btn" data-category="Lunch">Lunch</button>
+            <button class="filter-btn" data-category="Dinner">Dinner</button>
+            <button class="filter-btn" data-category="Dessert">Dessert</button>
+        </nav>
+
+        <section class="recipe-grid" id="recipe-grid">
+        </section>
+    </main>
+
+    <div class="modal-backdrop" id="modal-backdrop" hidden>
+        <div class="modal" id="recipe-modal" role="dialog" aria-modal="true" aria-label="Recipe details">
+            <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+            <div class="modal-content" id="modal-content">
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
